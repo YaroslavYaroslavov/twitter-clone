@@ -1,0 +1,15 @@
+{
+  "testEnvironment": "jsdom",
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/src/$1",
+    "^components/(.*)$": "<rootDir>/src/components/$1",
+    "^constants/(.*)$": "<rootDir>/src/constants/$1",
+    "^helpers/(.*)$": "<rootDir>/src/helpers/$1"
+  },
+  "preset": "ts-jest",
+
+  "transform": {
+    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+  },
+  "setupFilesAfterEnv": ["<rootDir>/jestSetup.ts"]
+}
