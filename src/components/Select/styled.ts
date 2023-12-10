@@ -1,11 +1,12 @@
 import styled from 'styled-components';
+import { colors } from 'theme/colorsPallete';
+import { StyledSelectProps } from './interface';
 
-import { StyledCustomSelectProps } from './interface';
-
-export const StyledCustomSelect = styled.select<StyledCustomSelectProps>`
-  width: ${({ width }) => width};
+export const StyledSelect = styled.select<StyledSelectProps>`
   height: 70px;
   font-size: 18px;
   border-radius: 6px;
-  border: 1px solid #c8cdd1;
+  border: 1px solid ${colors.border};
+
+  width: ${({ width }) => width};
 `;

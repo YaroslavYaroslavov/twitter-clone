@@ -26,10 +26,11 @@ module.exports = {
     },
     'import/resolver': {
       alias: [
-        ['src', './src/'],
+        ['src', './src'],
         ['components', './src/components'],
         ['constants', './src/constants'],
         ['helpers', './src/helpers'],
+        ['firebaseConfig', './src/firebaseConfig'],
       ],
     },
   },

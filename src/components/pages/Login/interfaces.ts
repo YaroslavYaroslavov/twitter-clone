@@ -1,4 +1,5 @@
-export interface SignupFormProps {
+export interface LoginForm {
+  login: string;
   phone: string;
   email: string;
   name: string;
@@ -6,4 +7,5 @@ export interface SignupFormProps {
   month: string;
   year: string;
   password: string;
+  date: string;
 }

@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-
-import { FirebaseContext } from '../../index';
+import { StateInterface } from 'interface';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
 export const Feed = () => {
-  const { auth } = useContext(FirebaseContext);
+  const auth = useSelector((state: StateInterface) => state.auth);
 
   return (
     <>

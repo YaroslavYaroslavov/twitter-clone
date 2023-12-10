@@ -1,16 +1,51 @@
+import { MonthsArray } from 'helpers/dateHelper';
 import React, { FC } from 'react';
+import { Controller } from 'react-hook-form';
 
-import { CustomSelectProps } from './interface';
-import { StyledCustomSelect } from './styled';
+import { SelectProps } from './interface';
+import { StyledSelect } from './styled';
 
-export const CustomSelect: FC<CustomSelectProps> = ({ optionsArr, placeholder, width }) => {
+export const Select: FC<SelectProps> = ({
+  optionsArr,
+  placeholder,
+  width,
+  isDirty,
+  control,
+  name,
+}) => {
   return (
-    <StyledCustomSelect width={width}>
-      <option value="">{placeholder}</option>
+    <Controller
+      name={name}
+      rules={{
+        required: true,
+      }}
+      control={control}
+      render={({ field }) => (
+        <StyledSelect
+          width={width}
+          onChange={(e) => {
+            field.onChange(parseInt(e.target.value)); // to fix
+          }}
+        >
+          {!isDirty && <option value="">{placeholder}</option>}
 
-      {optionsArr.map((option) => (
-        <option key={option}>{option}</option>
-      ))}
-    </StyledCustomSelect>
+          {optionsArr.map((option) => {
+            if (placeholder === 'Month') {
+              return (
+                <option value={option} key={option}>
+                  {MonthsArray[option]}
+                </option>
+              );
+            } else {
+              return (
+                <option value={option} key={option}>
+                  {option}
+                </option>
+              );
+            }
+          })}
+        </StyledSelect>
+      )}
+    />
   );
 };
