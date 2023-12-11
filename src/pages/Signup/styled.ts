@@ -7,7 +7,7 @@ export const SignupBodyContainer = styled.main`
   ${flexAlignCenter}
 `;
 
-export const SignupContainer = styled.div`
+export const SignupContainer = styled.section`
   ${flexColumn}
 
   width: 100vw;
@@ -32,7 +32,6 @@ export const Footer = styled.footer`
   ${flexAlignCenter}
 
   gap: 20px;
-
   flex-wrap: wrap;
   justify-content: space-evenly;
 `;
@@ -40,6 +39,7 @@ export const Footer = styled.footer`
 export const TwitterLogoSmall = styled.div`
   width: 50px;
   height: 41px;
+
   background-image: url(${twitterLogoSmall});
 `;
 
@@ -53,11 +53,15 @@ export const AuthorisationSection = styled.div`
   height: 50%;
   @media (max-width: 768px) {
     height: 100vh;
+    align-items: center;
+    width: 760px;
+    padding: 0;
   }
 `;
 
 export const ButtonContainer = styled.div`
   ${flexColumn}
+
   gap: 15px;
 `;
 

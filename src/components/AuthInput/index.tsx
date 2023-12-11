@@ -1,5 +1,5 @@
 import { validatePatterns } from 'constants/validatePatterns';
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useMemo } from 'react';
 import { validateMessages } from 'static/validateMessages';
 
 import { AuthInputProps } from './interface';
@@ -7,26 +7,12 @@ import { StyledAuthInput, StyledAuthInputContainet } from './styled';
 
 const { requiredFieldMessage } = validateMessages;
 
-export const AuthInput: FC<AuthInputProps> = ({
-  placeholder,
-  register,
-  type,
-  error,
-  fieldName,
-  validatePattern,
-}) => {
-  const [inputValue, setInputValue] = useState('');
-
-  const handleInputChange = useCallback(
-    (e: { target: { value: React.SetStateAction<string> } }) => {
-      setInputValue(e.target.value);
-    },
-    [setInputValue]
-  );
+export const AuthInput: FC<AuthInputProps> = (props) => {
+  const { placeholder, register, type, error, fieldName, validatePattern, getValues } = props;
 
   const checkPatternLogin = (name: string) => {
     if (name === 'login') {
-      return /[a-zA-Z]/.test(inputValue)
+      return /[a-zA-Z]/.test(getValues(fieldName))
         ? validatePatterns.emailPattern
         : validatePatterns.phonePattern;
     } else {
@@ -36,7 +22,7 @@ export const AuthInput: FC<AuthInputProps> = ({
 
   const pattern = useMemo(
     () => checkPatternLogin(fieldName) || validatePattern,
-    [fieldName, validatePattern]
+    [fieldName, validatePattern, getValues(fieldName)]
   );
 
   return (
@@ -51,7 +37,6 @@ export const AuthInput: FC<AuthInputProps> = ({
           pattern: pattern || validatePattern,
         })}
         error={error}
-        onChange={handleInputChange}
       />
     </StyledAuthInputContainet>
   );

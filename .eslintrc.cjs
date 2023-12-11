@@ -31,6 +31,7 @@ module.exports = {
         ['constants', './src/constants'],
         ['helpers', './src/helpers'],
         ['firebaseConfig', './src/firebaseConfig'],
+        ['theme', './src/theme'],
       ],
     },
   },

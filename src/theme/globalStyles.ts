@@ -1,5 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
-import { css } from 'styled-components';
+import { createGlobalStyle, css } from 'styled-components';
 
 export default createGlobalStyle`
   * {
@@ -8,7 +7,7 @@ export default createGlobalStyle`
     box-sizing: border-box
   }
   
-
+  
 `;
 
 export const flexAlignCenter = css`
@@ -28,4 +27,8 @@ export const centerByFlex = css`
 export const centerByFlexColumn = css`
   ${flexAlignCenter}
   flex-direction: column;
+`;
+
+export const defaultFont = css`
+  font-family: Arial, Helvetica, sans-serif;
 `;

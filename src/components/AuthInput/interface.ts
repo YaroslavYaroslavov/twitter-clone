@@ -1,5 +1,5 @@
-import { LoginForm } from 'components/pages/Login/interfaces';
-import { FieldError, UseFormRegister } from 'react-hook-form';
+import { LoginForm } from 'pages/Login/interfaces';
+import { FieldError, UseFormGetValues, UseFormRegister } from 'react-hook-form';
 
 interface Pattern {
   value: RegExp;
@@ -12,6 +12,7 @@ export interface AuthInputProps extends React.PropsWithRef<JSX.IntrinsicElements
   error: FieldError | undefined;
   fieldName: keyof LoginForm;
   validatePattern?: Pattern;
+  getValues: UseFormGetValues<LoginForm>;
 }
 
 export interface StyledAuthInputProps {

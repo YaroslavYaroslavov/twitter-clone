@@ -1,19 +1,26 @@
 import styled from 'styled-components';
-import { centerByFlexColumn } from 'theme/globalStyles';
+import { colors } from 'theme/colorsPallete';
+import { defaultFont } from 'theme/globalStyles';
 
 export const AuthWrapper = styled.div`
-  ${centerByFlexColumn}
-
   width: 500px;
+  padding-top: 50px;
   margin: auto;
-  margin-top: 50px;
   padding-left: 30px;
   padding-right: 30px;
   padding-bottom: 50px;
 `;
 
 export const HeaderAuthForm = styled.h1`
-  font-family: Arial, Helvetica, sans-serif;
+  ${defaultFont}
+
   margin-top: 40px;
   margin-bottom: 30px;
+`;
+
+export const GoBack = styled.p`
+  margin-bottom: 30px;
+  cursor: pointer;
+
+  color: ${colors.lightBlue};
 `;

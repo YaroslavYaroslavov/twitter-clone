@@ -7,10 +7,12 @@ export const ButtonWrapper = styled.button`
 
   max-width: 400px;
   height: 40px;
-  border: 1px solid ${colors.border};
   border-radius: 42px;
   background-color: white;
   transition: 0.2s;
+  width: 350px;
+
+  border: 1px solid ${colors.border};
 
   cursor: pointer;
 

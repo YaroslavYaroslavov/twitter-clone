@@ -1,13 +1,15 @@
+const adultAge = 18;
+
 export const checkIfValidYearPassed = (day: number, month: number, year: number) => {
   const inputDate = new Date(year, month, day);
   const currentDate = new Date();
 
-  inputDate.setFullYear(inputDate.getFullYear() + 16);
+  inputDate.setFullYear(inputDate.getFullYear() + adultAge);
 
   return currentDate >= inputDate;
 };
 
-export const MonthsArray = [
+export const monthsArray = [
   'January',
   'February',
   'March',
@@ -23,7 +25,11 @@ export const MonthsArray = [
 ];
 
 const isLeap = (year: number): boolean => {
-  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  const divisibleBy4 = year % 4 === 0;
+  const notDivisibleBy100 = year % 100 !== 0;
+  const divisibleBy400 = year % 400 === 0;
+
+  return (divisibleBy4 && notDivisibleBy100) || divisibleBy400;
 };
 
 export const getMonthDaysArray = (selectedYear: number) => {

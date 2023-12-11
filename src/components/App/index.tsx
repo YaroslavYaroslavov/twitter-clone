@@ -7,9 +7,10 @@ import React, { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useSelector } from 'react-redux';
 import { Route, Routes, useMatch, useNavigate } from 'react-router-dom';
+import GlobalStyles from 'theme/globalStyles';
 
-import GlobalStyles from '../../theme/globalStyles';
 import { configApp } from './config';
+import { Loader } from './styled';
 
 const { homepage, signup, feed } = paths;
 const { googleProviderUrl } = configApp;
@@ -18,7 +19,7 @@ function App() {
   const auth = useSelector((state: StateInterface) => state.auth);
   const navigate = useNavigate();
 
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
 
   const isSingnupPage = useMatch(signup);
 
@@ -49,14 +50,22 @@ function App() {
     <ErrorBoundary>
       <>
         <div id="recaptcha-container"></div>
-        <Routes>
-          {RoutesArr.map(({ pathname, element, logged }) =>
-            (user && logged) || (!user && !logged) ? (
-              <Route key={pathname} path={pathname} element={element} />
-            ) : null
-          )}
-        </Routes>
-
+        {loading ? (
+          <Loader />
+        ) : (
+          <Routes>
+            {RoutesArr.map(
+              ({ pathname, element, logged }) =>
+                !logged && <Route key={pathname} path={pathname} element={element} />
+            )}
+            {user &&
+              user.email &&
+              RoutesArr.map(
+                ({ pathname, element, logged }) =>
+                  logged && <Route key={pathname} path={pathname} element={element} />
+              )}
+          </Routes>
+        )}
         <GlobalStyles />
       </>
     </ErrorBoundary>

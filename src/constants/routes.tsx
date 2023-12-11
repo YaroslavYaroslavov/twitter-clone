@@ -1,7 +1,7 @@
-import { Feed } from 'components/Feed';
-import { Login } from 'components/pages/Login';
-import { Signup } from 'components/pages/Signup';
-import { SignupForm } from 'components/pages/SignupForm';
+import { Feed } from 'pages/Feed';
+import { Login } from 'pages/Login';
+import { Signup } from 'pages/Signup';
+import { SignupForm } from 'pages/SignupForm';
 import React from 'react';
 
 import { paths } from './paths';

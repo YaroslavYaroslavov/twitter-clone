@@ -4,10 +4,11 @@ import { flexColumn } from 'theme/globalStyles';
 
 export const AlternativeLogin = styled.p`
   color: ${colors.lightBlue};
+
   cursor: pointer;
 `;
 
-export const BirthdayContainer = styled.p`
+export const BirthdayContainer = styled.section`
   display: flex;
   justify-content: space-between;
 `;

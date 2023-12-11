@@ -1,4 +1,4 @@
-import { LoginForm } from 'components/pages/Login/interfaces';
+import { LoginForm } from 'pages/Login/interfaces';
 import { Control } from 'react-hook-form';
 
 export interface SelectProps {

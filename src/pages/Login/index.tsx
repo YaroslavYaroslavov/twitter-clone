@@ -24,7 +24,10 @@ export const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginForm>({ mode: 'all' });
+    getValues,
+  } = useForm<LoginForm>({
+    mode: 'onChange',
+  });
 
   const submit: SubmitHandler<LoginForm> = (data) => {
     if (data.login.indexOf('@') !== -1) {
@@ -63,6 +66,7 @@ export const Login = () => {
           register={register}
           error={errors.login}
           fieldName="login"
+          getValues={getValues}
         />
         <AuthInput
           placeholder={passwordPlaceholder}
@@ -70,6 +74,7 @@ export const Login = () => {
           error={errors.password}
           register={register}
           fieldName="password"
+          getValues={getValues}
         />
         <LoginButton>{loginButtonText}</LoginButton>
       </StyledLoginForm>

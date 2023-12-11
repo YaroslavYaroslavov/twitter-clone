@@ -1,18 +1,13 @@
-import { MonthsArray } from 'helpers/dateHelper';
+import { monthsArray } from 'helpers/dateHelper';
 import React, { FC } from 'react';
 import { Controller } from 'react-hook-form';
 
 import { SelectProps } from './interface';
 import { StyledSelect } from './styled';
 
-export const Select: FC<SelectProps> = ({
-  optionsArr,
-  placeholder,
-  width,
-  isDirty,
-  control,
-  name,
-}) => {
+export const BirtdaySelect: FC<SelectProps> = (props) => {
+  const { optionsArr, placeholder, width, isDirty, control, name } = props;
+
   return (
     <Controller
       name={name}
@@ -33,7 +28,7 @@ export const Select: FC<SelectProps> = ({
             if (placeholder === 'Month') {
               return (
                 <option value={option} key={option}>
-                  {MonthsArray[option]}
+                  {monthsArray[option]}
                 </option>
               );
             } else {

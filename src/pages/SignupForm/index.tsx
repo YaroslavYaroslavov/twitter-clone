@@ -1,8 +1,6 @@
 import { AuthForm } from 'components/AuthForm';
 import { AuthInput } from 'components/AuthInput';
-import { LoginForm } from 'components/pages/Login/interfaces';
-import { LoginButton } from 'components/pages/Login/styled';
-import { Select } from 'components/Select';
+import { BirtdaySelect } from 'components/BirthdaySelect';
 import { paths } from 'constants/paths';
 import { validatePatterns } from 'constants/validatePatterns';
 import { createUserWithEmailAndPassword, linkWithPhoneNumber } from 'firebase/auth';
@@ -15,6 +13,8 @@ import {
 } from 'helpers/dateHelper';
 import { googleSignIn } from 'helpers/googleSignIn';
 import { StateInterface } from 'interface';
+import { LoginForm } from 'pages/Login/interfaces';
+import { LoginButton } from 'pages/Login/styled';
 import React, { FC, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
@@ -53,7 +53,7 @@ export const SignupForm: FC = () => {
     watch,
     getValues,
   } = useForm<LoginForm>({
-    mode: 'all',
+    mode: 'onChange',
     defaultValues: { year: new Date().getUTCFullYear().toString(), month: '0' },
   });
 
@@ -105,6 +105,7 @@ export const SignupForm: FC = () => {
           error={errors.name}
           fieldName="name"
           validatePattern={validatePatterns.namePattern}
+          getValues={getValues}
         />
         <AuthInput
           placeholder={phonePlaceholder}
@@ -113,12 +114,14 @@ export const SignupForm: FC = () => {
           error={errors.phone}
           validatePattern={validatePatterns.phonePattern}
           fieldName="phone"
+          getValues={getValues}
         />
         <AuthInput
           placeholder={emailPlaceholder}
           type="email"
           register={register}
           error={errors.email}
+          getValues={getValues}
           validatePattern={validatePatterns.emailPattern}
           fieldName="email"
         />
@@ -126,6 +129,7 @@ export const SignupForm: FC = () => {
           placeholder={passwordPlaceholder}
           type="password"
           register={register}
+          getValues={getValues}
           error={errors.password}
           fieldName="password"
         />
@@ -152,7 +156,7 @@ export const SignupForm: FC = () => {
             },
           })}
         >
-          <Select
+          <BirtdaySelect
             control={control}
             name={'month'}
             optionsArr={monthIndex}
@@ -161,7 +165,7 @@ export const SignupForm: FC = () => {
             isDirty={dirtyFields?.month || false}
           />
 
-          <Select
+          <BirtdaySelect
             control={control}
             name={'day'}
             optionsArr={daysArray}
@@ -170,7 +174,7 @@ export const SignupForm: FC = () => {
             isDirty={dirtyFields?.day || false}
           />
 
-          <Select
+          <BirtdaySelect
             name="year"
             control={control}
             optionsArr={getYearsArray(1920)}
