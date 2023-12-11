@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { colors } from 'theme/colorsPallete';
+
 import { StyledSelectProps } from './interface';
 
 export const StyledSelect = styled.select<StyledSelectProps>`
