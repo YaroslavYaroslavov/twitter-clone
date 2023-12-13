@@ -1,4 +1,8 @@
-export const homepage = '/';
-export const signup = '/signup';
-export const login = '/login';
-export const feed = '/feed';
+export const paths = {
+  homepage: '/',
+  signup: '/signup',
+  login: '/login',
+  feed: '/feed',
+  profile: '/profile',
+  notfound: '/notfound',
+};

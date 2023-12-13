@@ -8,16 +8,17 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "prettier": "prettier . --check"
+    "prettier": "prettier . --fix"
   },
   "dependencies": {
-    "dotenv": "^16.3.1",
     "firebase": "^10.7.0",
     "firebase-react-hooks": "^0.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",
+    "react-redux": "^9.0.3",
     "react-router-dom": "^6.20.0",
+    "redux": "^5.0.0",
     "styled-components": "^6.1.1"
   },
   "devDependencies": {
@@ -32,6 +33,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
     "eslint-plugin-simple-import-sort": "^10.0.0",
+    "prettier": "^3.1.1",
     "react-firebase-hooks": "^5.1.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.0"

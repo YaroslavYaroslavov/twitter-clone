@@ -7,8 +7,28 @@ export default defineConfig({
   resolve: {
     alias: [
       {
+        find: 'src',
+        replacement: fileURLToPath(new URL('./src', import.meta.url)),
+      },
+      {
+        find: 'theme',
+        replacement: fileURLToPath(new URL('./src/theme', import.meta.url)),
+      },
+      {
+        find: 'firebaseConfig',
+        replacement: fileURLToPath(new URL('./src/firebaseConfig', import.meta.url)),
+      },
+      {
         find: 'components',
         replacement: fileURLToPath(new URL('./src/components', import.meta.url)),
+      },
+      {
+        find: 'helpers',
+        replacement: fileURLToPath(new URL('./src/helpers', import.meta.url)),
+      },
+      {
+        find: 'static',
+        replacement: fileURLToPath(new URL('./src/static', import.meta.url)),
       },
       {
         find: 'constants',
@@ -17,6 +37,10 @@ export default defineConfig({
       {
         find: 'assets',
         replacement: fileURLToPath(new URL('./src/assets', import.meta.url)),
+      },
+      {
+        find: 'pages',
+        replacement: fileURLToPath(new URL('./src/pages', import.meta.url)),
       },
     ],
   },
