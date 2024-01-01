@@ -42,6 +42,10 @@ export default defineConfig({
         find: 'pages',
         replacement: fileURLToPath(new URL('./src/pages', import.meta.url)),
       },
+      {
+        find: 'hooks',
+        replacement: fileURLToPath(new URL('./src/hooks', import.meta.url)),
+      },
     ],
   },
 });

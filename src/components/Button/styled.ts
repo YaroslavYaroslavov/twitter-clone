@@ -17,6 +17,6 @@ export const ButtonWrapper = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: #cdcdcd;
+    background-color: ${colors.lightGrayHover};
   }
 `;

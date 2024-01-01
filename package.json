@@ -18,7 +18,9 @@
     "react-hook-form": "^7.48.2",
     "react-redux": "^9.0.3",
     "react-router-dom": "^6.20.0",
+    "react-textarea-autosize": "^8.5.3",
     "redux": "^5.0.0",
+    "redux-thunk": "^3.1.0",
     "styled-components": "^6.1.1"
   },
   "devDependencies": {

@@ -55,3 +55,12 @@ export const Loader = styled.div`
     animation: ${eyeMove} 3s infinite;
   }
 `;
+
+export const AppContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+`;
+
+export const MainContent = styled.main`
+  width: 900px;
+`;

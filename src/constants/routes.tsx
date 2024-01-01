@@ -1,12 +1,13 @@
 import { Feed } from 'pages/Feed';
 import { Login } from 'pages/Login';
+import { Profile } from 'pages/Profile';
 import { Signup } from 'pages/Signup';
 import { SignupForm } from 'pages/SignupForm';
 import React from 'react';
 
 import { paths } from './paths';
 
-const { homepage, signup, login, feed } = paths;
+const { homepage, signup, login, feed, profile } = paths;
 
 export const RoutesArr = [
   {
@@ -27,6 +28,11 @@ export const RoutesArr = [
   {
     pathname: feed,
     element: <Feed />,
+    logged: true,
+  },
+  {
+    pathname: profile,
+    element: <Profile />,
     logged: true,
   },
 ];

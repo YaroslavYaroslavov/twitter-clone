@@ -4,6 +4,7 @@ import { BirtdaySelect } from 'components/BirthdaySelect';
 import { paths } from 'constants/paths';
 import { validatePatterns } from 'constants/validatePatterns';
 import { createUserWithEmailAndPassword, linkWithPhoneNumber } from 'firebase/auth';
+import { onValue, ref, set } from 'firebase/database';
 import { checkOTP } from 'helpers/checkOTP';
 import {
   checkIfValidYearPassed,
@@ -15,7 +16,7 @@ import { googleSignIn } from 'helpers/googleSignIn';
 import { StateInterface } from 'interface';
 import { LoginForm } from 'pages/Login/interfaces';
 import { LoginButton } from 'pages/Login/styled';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -60,19 +61,29 @@ export const SignupForm: FC = () => {
   const navigate = useNavigate();
 
   const auth = useSelector((state: StateInterface) => state.auth);
+  const db = useSelector((state: StateInterface) => state.db);
+  const dbUserReference = useSelector((state: StateInterface) => state.dbUserReference);
 
   const [daysArray, setDaysArray] = useState(
     getDaysArray(Number(getValues('month')), Number(getValues('year')))
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const subscription = watch(({ month, year }) =>
       setDaysArray(getDaysArray(Number(month), Number(year)))
     );
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  const handleRegister: SubmitHandler<LoginForm> = ({ email, password, phone }) => {
+  const handleRegister: SubmitHandler<LoginForm> = ({
+    email,
+    password,
+    phone,
+    name,
+    month,
+    year,
+    day,
+  }) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(async ({ user }) => {
         const appVerify = window.recaptchaVerifier;
@@ -81,7 +92,24 @@ export const SignupForm: FC = () => {
             confirmationResult
               .confirm(checkOTP())
               .then(() => {
-                navigate(feed);
+                onValue(dbUserReference, (snapshot) => {
+                  const data = snapshot.val();
+                  const usersCount = Object.keys(data).length;
+
+                  set(ref(db, `users/${user.uid}`), {
+                    username: name,
+                    avatar: null,
+                    userId: user.uid,
+                    userlink: `id${usersCount + 1}`,
+                    description: '',
+                    phone: phone,
+                    month,
+                    day,
+                    year,
+                  });
+
+                  navigate(feed);
+                });
               })
               .catch((err) => {
                 user.delete();

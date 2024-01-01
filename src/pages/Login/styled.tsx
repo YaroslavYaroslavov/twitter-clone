@@ -9,17 +9,15 @@ export const LoginButton = styled.button`
   width: 450px;
   height: 60px;
   color: white;
-  background-color: ${lightBlue};
+  background-color: ${({ disabled }) => (!disabled ? lightBlue : lightBlueInactive)};
   border: none;
   border-radius: 76px;
   font-size: 20px;
 
-  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
-
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 
   &:hover {
-    background-color: ${({ disabled }) => (disabled ? lightBlueInactive : lightBlue)};
+    background-color: ${({ disabled }) => !disabled && lightBlueInactive};
   }
 `;
 

@@ -3,6 +3,6 @@ export const paths = {
   signup: '/signup',
   login: '/login',
   feed: '/feed',
-  profile: '/profile',
+  profile: '/profile/:id',
   notfound: '/notfound',
 };

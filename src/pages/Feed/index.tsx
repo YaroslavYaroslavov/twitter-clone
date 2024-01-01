@@ -1,17 +1,32 @@
+import { Post } from 'components/Post';
 import { StateInterface } from 'interface';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
 export const Feed = () => {
-  const auth = useSelector((state: StateInterface) => state.auth);
+  const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
+  const posts = useSelector((state: StateInterface) => state.posts);
+
+  const followedPosts =
+    currentUserInfo !== undefined &&
+    currentUserInfo?.follow !== undefined &&
+    Object.keys(currentUserInfo?.follow).reduce((followedPosts, userId) => {
+      if (posts[userId]) {
+        return {
+          ...followedPosts,
+          ...posts[userId],
+        };
+      }
+      return followedPosts;
+    }, {});
 
   return (
     <>
-      <nav>
-        <button onClick={() => auth.signOut()}>Log out</button>
-      </nav>
-      <main></main>
-      <aside></aside>
+      {Object.values(followedPosts)
+        .sort((a, b) => b.time - a.time)
+        .map((post) => {
+          return <Post key={post.postId} postData={post} />;
+        })}
     </>
   );
 };
