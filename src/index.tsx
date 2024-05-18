@@ -15,8 +15,8 @@ export const SET_POSTS = 'SET_POSTS';
 export const setUserDataAction = (userData: UserInfo) => ({
   type: SET_USER_DATA,
   payload: userData,
-});
-
+}); 
+// asdasd
 export const setPostsAction = (posts: { userId: PostInterface }) => ({
   type: SET_POSTS,
   payload: posts,
