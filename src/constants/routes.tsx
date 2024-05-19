@@ -6,8 +6,9 @@ import { SignupForm } from 'pages/SignupForm';
 import React from 'react';
 
 import { paths } from './paths';
+import Messages from 'pages/Messages';
 
-const { homepage, signup, login, feed, profile } = paths;
+const { homepage, signup, login, feed, profile, messages } = paths;
 
 export const RoutesArr = [
   {
@@ -35,4 +36,9 @@ export const RoutesArr = [
     element: <Profile />,
     logged: true,
   },
+  {
+    pathname: messages,
+    element: <Messages />,
+    logged: true,
+  }
 ];

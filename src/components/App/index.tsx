@@ -12,8 +12,9 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useMatch, useNavigate } from 'react-router-dom';
 import GlobalStyles from 'theme/globalStyles';
+import Messages from 'pages/Messages';
 
-import { setPostsAction, setUserDataAction, setUsersAction } from '../../index';
+import { setMessagesAction, setPostsAction, setUserDataAction, setUsersAction } from '../../index';
 import { configApp } from './config';
 import { AppContainer, Loader, MainContent } from './styled';
 
@@ -43,6 +44,7 @@ function App() {
 
   const dbUserReference = ref(db, `users`);
   const dbPostsReference = ref(db, `tweets`);
+  const dbMessagesReference = ref(db, `messages`)
 
   useEffect(() => {
     onValue(dbUserReference, (snapshot) => {
@@ -64,6 +66,15 @@ function App() {
         }
       }
     });
+  });
+
+  onValue(dbMessagesReference, (snapshot) => {
+    if (snapshot.exists()) {
+      const messageInfo = snapshot.val();
+      if (typeof messageInfo === 'object') {
+        dispatch(setMessagesAction(Object.values(messageInfo)));
+      }
+    }
   });
 
   useEffect(() => {
@@ -107,6 +118,7 @@ function App() {
                   ({ pathname, element, logged }) =>
                     logged && <Route key={pathname} path={pathname} element={element} />
                 )}
+                 <Route path="/messages" element={<Messages />} />
             </Routes>
           )}
         </MainContent>

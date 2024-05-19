@@ -29,7 +29,7 @@ const navbarLinks = [
   {
     icon: null,
     text: 'Messages',
-    to: feed,
+    to: '/messages',
   },
   {
     icon: null,
