@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Modal } from 'components/Modal';
-import { sendMessage } from 'components/SendMessage'; 
+import { sendMessage } from 'components/SendMessage'; // Предполагается, что это путь к вашему файлу sendMessage
 
-export const MessageModal = ({ active, setActive, recipientUserId, senderUserId}) => {
+export const MessageModal = ({ active, setActive, recipientUserId, senderUserId, recipientName }) => {
   const [messageText, setMessageText] = useState('');
 
   const handleSendMessage = () => {
     if (messageText.trim() !== '') {
-      sendMessage(messageText, recipientUserId, senderUserId); 
+      sendMessage(messageText, recipientUserId, senderUserId, recipientName); // Передаем имя пользователя
       setMessageText('');
-      setActive(false); 
+      setActive(false);
     }
   };
 
