@@ -257,7 +257,6 @@ export const Profile = () => {
         setActive={setMessageModalActive}
         recipientUserId={currentUserPage?.userId}
         senderUserId={currentUserInfo?.userId}
-        recipientName={currentUserPage?.username} // Передаем имя пользователя
       />
     </>
   );
