@@ -151,3 +151,19 @@ export const DescriptionInput = styled(TextareaAutosize)`
 
   border-radius: 12px;
 `;
+export const MessageButton = styled.button`
+  ${defaultFont}
+
+  border-radius: 50px;
+  border: none;
+  background-color: ${colors.lightBlue};
+  color: white;
+  width: 120px;
+  font-weight: 700;
+  height: 44px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${colors.lightBlueInactive};
+  }
+`;

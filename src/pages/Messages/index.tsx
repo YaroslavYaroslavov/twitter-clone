@@ -8,9 +8,9 @@ import { sendMessage } from 'components/SendMessage';
 const Messages = () => {
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const [interlocutors, setInterlocutors] = useState({}); // Состояние для хранения информации о собеседниках
 
-  //Redux хранилище
-  const currentUserInfo = useSelector(state => state.userInfo); 
+  const currentUserInfo = useSelector(state => state.userInfo);
 
   useEffect(() => {
     if (currentUserInfo && currentUserInfo.userId) {
@@ -24,6 +24,17 @@ const Messages = () => {
             lastMessage: conversationsData[userId].lastMessage,
           }));
           setConversations(conversationsList);
+
+          // Загрузка информации о собеседниках
+          const newInterlocutors = {};
+          conversationsList.forEach((conversation) => {
+            const interlocutorRef = ref(db, `users/${conversation.id}`);
+            onValue(interlocutorRef, (snapshot) => {
+              const interlocutorData = snapshot.val();
+              newInterlocutors[conversation.id] = interlocutorData;
+              setInterlocutors(newInterlocutors);
+            });
+          });
         }
       });
     }
@@ -37,20 +48,25 @@ const Messages = () => {
     setSelectedConversation(null);
   };
 
-  console.log(conversations);
-  
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', padding: '10px', border: '1px solid #ccc', marginTop: '20px' }}>
-      <div style={{ padding: '10px', marginRight: '10px', borderRight: '1px solid #ccc', overflowY: 'auto', height: 'calc(100vh - 100px)' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', padding: '10px', border: '1px solid #ccc', borderRadius: '10px', marginTop: '20px' }}>
+      <div style={{ padding: '5px', marginRight: '10px', borderRight: '1px solid #ccc', overflowY: 'auto', height: 'calc(100vh - 100px)' }}>
         {conversations.map((conversation) => {
-          console.log(conversation);
-          
+          const interlocutorInfo = interlocutors[conversation.id];
           return (
-        <div key={conversation.id} onClick={() => handleConversationClick(conversation)} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px', cursor: 'pointer', backgroundColor: '#f8f8f8' }}>
-          <h2>{conversation.name}</h2>
-          <p>{conversation.lastMessage}</p>
-        </div>)} )}
-
+            <div key={conversation.id} onClick={() => handleConversationClick(conversation)} style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px', marginBottom: '10px', cursor: 'pointer', backgroundColor: '#f8f8f8', display: 'flex', alignItems: 'center' }}>
+              {interlocutorInfo && (
+                <>
+                  <img src={interlocutorInfo.avatar} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} />
+                  <div>
+                    <h2 style={{ margin: 0, fontSize: '16px' }}>{interlocutorInfo.username}</h2>
+                    <p style={{ margin: 0, fontSize: '14px' }}>{conversation.lastMessage}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          );
+        })}
       </div>
       <div style={{ padding: '10px' }}>
         {selectedConversation && (

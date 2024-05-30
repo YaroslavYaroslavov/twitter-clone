@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
 import { Modal } from 'components/Modal';
-import { sendMessage } from 'components/SendMessage'; 
+import { sendMessage } from 'components/SendMessage';
+import { MessageModalData, MessageInput, SendButton } from 'components/MessageModal/styled';
 
-export const MessageModal = ({ active, setActive, recipientUserId, senderUserId}) => {
+export const MessageModal = ({ active, setActive, recipientUserId, senderUserId }) => {
   const [messageText, setMessageText] = useState('');
 
   const handleSendMessage = () => {
     if (messageText.trim() !== '') {
-      sendMessage(messageText, recipientUserId, senderUserId); 
+      sendMessage(messageText, recipientUserId, senderUserId);
       setMessageText('');
-      setActive(false); 
+      setActive(false);
     }
   };
 
   return (
     <Modal active={active} setActive={setActive}>
-      <h2>Send a message:</h2>
-      <input
-        value={messageText}
-        onChange={(e) => setMessageText(e.target.value)}
-        placeholder="Type your message here..."
-      />
-      <button onClick={handleSendMessage}>Send</button>
+      <MessageModalData>
+        <h2>Send a message:</h2>
+        <MessageInput
+          value={messageText}
+          onChange={(e) => setMessageText(e.target.value)}
+          placeholder="Type a message..."
+        />
+        <SendButton onClick={handleSendMessage}>Send</SendButton>
+      </MessageModalData>
     </Modal>
   );
 };

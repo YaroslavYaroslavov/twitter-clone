@@ -44,54 +44,53 @@ const Dialog = ({ conversation, onClose }) => {
   };
 
   return (
-    <div style={{ padding: '10px', display: 'flex', flexDirection: 'column', height: '90vh' }}>
-      <h2>Dialog with {interlocutorInfo ? interlocutorInfo.username : 'Loading...'}</h2>
-      <div style={{ flexGrow: 1, overflowY: 'auto', padding: '10px', marginBottom: '10px', marginTop: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
-        {messages.map((message) => (
-          <div key={message.id} style={{ display: 'flex', alignItems: 'flex-start', padding: '10px' }}>
+ <div className="dialog-container">
+    <h2>Dialog with {interlocutorInfo ? interlocutorInfo.username : 'Loading...'}</h2>
+    <div className="messages-container">
+      {messages.map((message) => (
+        <div key={message.id} className={`message-item ${message.sender === currentUserInfo.userId ? 'mine' : 'theirs'}`}>
+          <div className="avatar-link">
             {message.sender === currentUserInfo.userId ? (
-              <Link to={`/profile/${currentUserInfo.userlink}`} style={{ textDecoration: 'none', color: 'inherit', marginRight: '10px' }}>
+              <Link to={`/profile/${currentUserInfo.userlink}`}>
                 <img
                   src={currentUserInfo.avatar}
                   alt="Avatar"
-                  style={{ width: '30px', height: '30px', borderRadius: '50%' }}
+                  className="avatar"
                 />
               </Link>
             ) : (
-              <Link to={`/profile/${interlocutorInfo.userlink}`} style={{ textDecoration: 'none', color: 'inherit', marginRight: '10px' }}>
+              <Link to={`/profile/${interlocutorInfo.userlink}`}>
                 <img
                   src={interlocutorInfo.avatar}
                   alt="Avatar"
-                  style={{ width: '30px', height: '30px', borderRadius: '50%' }}
+                  className="avatar"
                 />
               </Link>
             )}
-            <div>
-              {message.sender === currentUserInfo.userId ? (
-                <b>{currentUserInfo.username}:</b>
-              ) : (
-                <b>{interlocutorInfo.username}:</b>
-              )}
-              {message.text}
+            <div className="username">
+              {message.sender === currentUserInfo.userId ? currentUserInfo.username : interlocutorInfo.username}
             </div>
           </div>
-        ))}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', padding: '10px', borderTop: '1px solid #ccc' }}>
-        <textarea
-          className="message-input"
-          value={newMessageText}
-          onChange={(e) => setNewMessageText(e.target.value)}
-          placeholder="Type a message..."
-          style={{ marginBottom: '10px', padding: '10px', flexGrow: 0, resize: 'none' }}
-        />
-        <div style={{ display: 'flex'}}>
-          <button onClick={handleSendMessage} style={{ marginRight: '10px' }}>Send</button>
-          <button onClick={onClose}>Close</button>
+          <div className="message-content">
+            {message.text}
+          </div>
         </div>
+      ))}
+    </div>
+    <div className="input-container">
+      <textarea
+        className="message-input"
+        value={newMessageText}
+        onChange={(e) => setNewMessageText(e.target.value)}
+        placeholder="Type a message..."
+      />
+      <div className="button-container">
+        <button className="send-button" onClick={handleSendMessage}>Send</button>
+        <button className="close-button" onClick={onClose}>Close</button>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default Dialog;

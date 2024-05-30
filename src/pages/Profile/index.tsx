@@ -25,6 +25,7 @@ import {
   FollowCounter,
   FollowerInfoContainer,
   Header,
+  MessageButton,
   ProfileContainer,
   ProfileInfoContainer,
   ProfileMain,
@@ -192,7 +193,7 @@ export const Profile = () => {
             </div>
             {!isUserOwnerPage && (
           <>
-            <button onClick={handleMessageButtonClick}>Message</button>
+            <MessageButton onClick={handleMessageButtonClick}>Message</MessageButton>
           </>
         )}
           {conversations.map((conversation) => {
