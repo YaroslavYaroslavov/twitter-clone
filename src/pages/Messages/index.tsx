@@ -75,11 +75,13 @@ const Messages = () => {
     setIsCreatingConversation(false);
   };
 
+
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', padding: '10px', border: '1px solid #ccc', borderRadius: '10px', marginTop: '20px' }}>
       <div style={{ padding: '5px', marginRight: '10px', borderRight: '1px solid #ccc', overflowY: 'auto', height: 'calc(100vh - 100px)' }}>
         {conversations.map((conversation) => {
-          const interlocutorInfo = interlocutors[conversation.id];
+          const interlocutorInfo = interlocutors[conversation.id];   
+           console.log(interlocutorInfo.avatar)
           return (
             <div key={conversation.id} onClick={() => handleConversationClick(conversation)} style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px', marginBottom: '10px', cursor: 'pointer', backgroundColor: '#f8f8f8', display: 'flex', alignItems: 'center', paddingLeft: '10px' }}>
               {interlocutorInfo && (
