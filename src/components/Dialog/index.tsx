@@ -31,7 +31,7 @@ const Dialog = ({ conversation, onClose }) => {
   // Функция скроллинга
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
     }
   }, []);
 
