@@ -1,17 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { ref, onValue } from 'firebase/database';
 import { db } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
 import { sendMessage } from 'components/SendMessage';
 import { Link } from 'react-router-dom';
-import './styled.css';
+
+import {
+  DialogContainer,
+  MessagesContainer, 
+  MessageItem, 
+  AvatarLink, 
+  Avatar, 
+  Username, 
+  MessageContent, 
+  InputContainer, 
+  MessageInput, 
+  ButtonContainer, 
+  SendButton, 
+  CloseButton 
+} from './styled';
 
 const Dialog = ({ conversation, onClose }) => {
   const [messages, setMessages] = useState([]);
   const [newMessageText, setNewMessageText] = useState('');
   const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
   const [interlocutorInfo, setInterlocutorInfo] = useState(null);
+  const messagesEndRef = useRef(null); 
+
+  // Функция скроллинга
+  const scrollToBottom = useCallback(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
 
   useEffect(() => {
     if (currentUserInfo && conversation) {
@@ -37,6 +59,10 @@ const Dialog = ({ conversation, onClose }) => {
     }
   }, [conversation, currentUserInfo]);
 
+  useEffect(() => {
+    scrollToBottom(); 
+  }, [messages, scrollToBottom]);
+
   const handleSendMessage = () => {
     if (newMessageText.trim() === '') return;
     sendMessage(newMessageText, conversation.id, currentUserInfo.userId);
@@ -44,53 +70,49 @@ const Dialog = ({ conversation, onClose }) => {
   };
 
   return (
- <div className="dialog-container">
-    <h2>Dialog with {interlocutorInfo ? interlocutorInfo.username : 'Loading...'}</h2>
-    <div className="messages-container">
-      {messages.map((message) => (
-        <div key={message.id} className={`message-item ${message.sender === currentUserInfo.userId ? 'mine' : 'theirs'}`}>
-          <div className="avatar-link">
+    <DialogContainer>
+      <h2>Dialog with {interlocutorInfo ? interlocutorInfo.username : 'Loading...'}</h2>
+      <MessagesContainer>
+        {messages.map((message) => (
+          <MessageItem key={message.id} className={message.sender === currentUserInfo.userId ? 'mine' : 'theirs'}>
             {message.sender === currentUserInfo.userId ? (
-              <Link to={`/profile/${currentUserInfo.userlink}`}>
-                <img
-                  src={currentUserInfo.avatar}
-                  alt="Avatar"
-                  className="avatar"
-                />
-              </Link>
+              <>
+                <AvatarLink>
+                  <Link to={`/profile/${currentUserInfo.userlink}`}>
+                    <Avatar src={currentUserInfo.avatar} alt="Avatar" />
+                  </Link>
+                  <Username>{currentUserInfo.username}</Username>
+                </AvatarLink>
+                <MessageContent>{message.text}</MessageContent>
+              </>
             ) : (
-              <Link to={`/profile/${interlocutorInfo.userlink}`}>
-                <img
-                  src={interlocutorInfo.avatar}
-                  alt="Avatar"
-                  className="avatar"
-                />
-              </Link>
+              <>
+                <AvatarLink>
+                  <Link to={`/profile/${interlocutorInfo.userlink}`}>
+                    <Avatar src={interlocutorInfo.avatar} alt="Avatar" />
+                  </Link>
+                  <Username>{interlocutorInfo.username}</Username>
+                </AvatarLink>
+                <MessageContent>{message.text}</MessageContent>
+              </>
             )}
-            <div className="username">
-              {message.sender === currentUserInfo.userId ? currentUserInfo.username : interlocutorInfo.username}
-            </div>
-          </div>
-          <div className="message-content">
-            {message.text}
-          </div>
-        </div>
-      ))}
-    </div>
-    <div className="input-container">
-      <textarea
-        className="message-input"
-        value={newMessageText}
-        onChange={(e) => setNewMessageText(e.target.value)}
-        placeholder="Type a message..."
-      />
-      <div className="button-container">
-        <button className="send-button" onClick={handleSendMessage}>Send</button>
-        <button className="close-button" onClick={onClose}>Close</button>
-      </div>
-    </div>
-  </div>
-);
+          </MessageItem>
+        ))}
+        <div ref={messagesEndRef} />
+      </MessagesContainer>
+      <InputContainer>
+        <MessageInput
+          value={newMessageText}
+          onChange={(e) => setNewMessageText(e.target.value)}
+          placeholder="Type a message..."
+        />
+        <ButtonContainer>
+          <SendButton onClick={handleSendMessage}>Send</SendButton>
+          <CloseButton onClick={onClose}>Close</CloseButton>
+        </ButtonContainer>
+      </InputContainer>
+    </DialogContainer>
+  );
 };
 
 export default Dialog;

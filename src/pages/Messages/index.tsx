@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { ref, onValue } from 'firebase/database';
-import { db } from 'firebaseConfig/firebase';
+import CreateConversation from 'components/CreateConversation/index';
 import Dialog from 'components/Dialog';
-import { sendMessage } from 'components/SendMessage';
+import { onValue,ref } from 'firebase/database';
+import { db } from 'firebaseConfig/firebase';
+import React, { useEffect,useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const Messages = () => {
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [interlocutors, setInterlocutors] = useState({}); // Состояние для хранения информации о собеседниках
+  const [isCreatingConversation, setIsCreatingConversation] = useState(false); // Состояние для отслеживания создания беседы
+  const [availableUsers, setAvailableUsers] = useState([]);
 
   const currentUserInfo = useSelector(state => state.userInfo);
 
@@ -40,6 +42,23 @@ const Messages = () => {
     }
   }, [currentUserInfo]);
 
+  useEffect(() => {
+    if (currentUserInfo && currentUserInfo.userId) {
+      const messagesRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/users`);
+      onValue(messagesRef, (snapshot) => {
+        const conversationsData = snapshot.val();
+        if (conversationsData) {
+          const availableUsersList = Object.keys(conversationsData).map((userId) => ({
+            id: userId,
+            username: conversationsData[userId].username,
+            avatar: conversationsData[userId].avatar,
+          }));
+          setAvailableUsers(availableUsersList);
+        }
+      });
+    }
+  }, [currentUserInfo]);
+
   const handleConversationClick = (conversation) => {
     setSelectedConversation(conversation);
   };
@@ -48,13 +67,21 @@ const Messages = () => {
     setSelectedConversation(null);
   };
 
+  const handleCreateConversation = () => {
+    setIsCreatingConversation(true);
+  };
+
+  const handleConversationCreated = (newConversationId) => {
+    setIsCreatingConversation(false);
+  };
+
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', padding: '10px', border: '1px solid #ccc', borderRadius: '10px', marginTop: '20px' }}>
       <div style={{ padding: '5px', marginRight: '10px', borderRight: '1px solid #ccc', overflowY: 'auto', height: 'calc(100vh - 100px)' }}>
         {conversations.map((conversation) => {
           const interlocutorInfo = interlocutors[conversation.id];
           return (
-            <div key={conversation.id} onClick={() => handleConversationClick(conversation)} style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px', marginBottom: '10px', cursor: 'pointer', backgroundColor: '#f8f8f8', display: 'flex', alignItems: 'center' }}>
+            <div key={conversation.id} onClick={() => handleConversationClick(conversation)} style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px', marginBottom: '10px', cursor: 'pointer', backgroundColor: '#f8f8f8', display: 'flex', alignItems: 'center', paddingLeft: '10px' }}>
               {interlocutorInfo && (
                 <>
                   <img src={interlocutorInfo.avatar} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} />
@@ -73,6 +100,17 @@ const Messages = () => {
           <Dialog
             conversation={selectedConversation}
             onClose={handleDialogClose}
+          />
+        )}
+        {!selectedConversation && !isCreatingConversation && (
+          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+            <button onClick={handleCreateConversation}>Создать беседу</button>
+          </div>
+        )}
+        {isCreatingConversation && (
+          <CreateConversation
+            onConversationCreated={handleConversationCreated}
+            availableUsers={availableUsers}
           />
         )}
       </div>
