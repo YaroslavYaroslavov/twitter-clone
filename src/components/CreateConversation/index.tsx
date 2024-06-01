@@ -5,7 +5,7 @@ import { db } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
 import { ButtonTweet } from 'components/Navbar/styled';
 
-const CreateConversation = ({ onConversationCreated, availableUsers }) => {
+const CreateConversation = ({ onConversationCreated, availableUsers}) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [conversationName, setConversationName] = useState(''); 
   const currentUserInfo = useSelector(state => state.userInfo);
@@ -24,31 +24,40 @@ const CreateConversation = ({ onConversationCreated, availableUsers }) => {
 
   const handleCreateConversation = () => {
     if (selectedUsers.length > 0 && conversationName.trim() !== '') {
-      const recipientUserId = selectedUsers[0].id;
       const senderUserId = currentUserInfo.userId;
-  
-      const senderConversationRef = ref(db, `message/usersWithMessage/${senderUserId}/chats`);
-      const newConversationRef = push(senderConversationRef);
+
       const newConversationData = {
         name: conversationName,
-        users: {
-          [recipientUserId]: {
-            lastMessage: '',
-          },
-          [senderUserId]: {
-            lastMessage: '',
-          },
-        },
+        users: {},
       };
-  
-      set(newConversationRef, newConversationData)
-        .then(() => {
-          console.log('Conversation data written successfully.');
-          onConversationCreated(newConversationRef.key); 
-        })
-        .catch((error) => {
-          console.error('Error writing conversation data:', error);
-        });
+
+      selectedUsers.forEach((user) => {
+        const recipientUserId = user.id;
+        const senderConversationRef = ref(db, `message/usersWithMessage/${senderUserId}/chats/${recipientUserId}`);
+        const recipientConversationRef = ref(db, `message/usersWithMessage/${recipientUserId}/chats/${senderUserId}`);
+
+        newConversationData.users[recipientUserId] = {
+          lastMessage: '',
+          sender: senderUserId,
+          timestamp: Date.now(),
+        };
+
+        set(senderConversationRef, newConversationData)
+          .then(() => {
+            console.log('Conversation data written successfully for sender.');
+            set(recipientConversationRef, newConversationData)
+              .then(() => {
+                console.log('Conversation data written successfully for recipient.');
+                onConversationCreated(recipientUserId);
+              })
+              .catch((error) => {
+                console.error('Error writing conversation data for recipient:', error);
+              });
+          })
+          .catch((error) => {
+            console.error('Error writing conversation data for sender:', error);
+          });
+      });
     }
   };
 
