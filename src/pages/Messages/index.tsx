@@ -12,12 +12,14 @@ const Messages = () => {
   const [interlocutors, setInterlocutors] = useState({});
   const [isCreatingConversation, setIsCreatingConversation] = useState(false); // Состояние для отслеживания создания беседы
   const [availableUsers, setAvailableUsers] = useState([]);
+  const [chats, setChats] = useState([])
 
   const currentUserInfo = useSelector(state => state.userInfo);
 
   useEffect(() => {
     if (currentUserInfo && currentUserInfo.userId) {
       const messagesRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/users`);
+
       onValue(messagesRef, (snapshot) => {
         const conversationsData = snapshot.val();
         if (conversationsData) {
@@ -31,6 +33,7 @@ const Messages = () => {
           // Загрузка информации о собеседниках
           const newInterlocutors = {};
           conversationsList.forEach((conversation) => {
+            console.log('conversation: ', conversation)
             const interlocutorRef = ref(db, `users/${conversation.id}`);
             onValue(interlocutorRef, (snapshot) => {
               const interlocutorData = snapshot.val();
@@ -46,6 +49,18 @@ const Messages = () => {
   useEffect(() => {
     if (currentUserInfo && currentUserInfo.userId) {
       const messagesRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/users`);
+      const chatsRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/chats`)
+
+      onValue(chatsRef, (snapshot) => {
+        const chatsData = snapshot.val();
+        if (chatsData) {
+          const chatsList = Object.keys(chatsData).map((chatID) => ({
+            id: chatID
+          }));
+          setChats(chatsData);
+          console.log("chatsData: ",chatsData)
+        }
+      })
       onValue(messagesRef, (snapshot) => {
         const conversationsData = snapshot.val();
         if (conversationsData) {
@@ -98,15 +113,21 @@ const Messages = () => {
                     <img src={interlocutorInfo.avatar} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} />
                     <div>
                       <h2 style={{ margin: 0, fontSize: '16px' }}>{interlocutorInfo.username}</h2>
-                      <p style={{ margin: 0, fontSize: '14px' }}>{conversation.lastMessage}</p>
+                      {/* <p style={{ margin: 0, fontSize: '14px' }}>{conversation.lastMessage}</p> */}
                     </div>
                   </>
                 )}
               </div>
             );
+
+
           })
+         
+
         )}
+        
       </div>
+      {/* <hr></hr> */}
       <div style={{ padding: '10px' }}>
         {selectedConversation && (
           <Dialog

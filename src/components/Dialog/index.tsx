@@ -38,7 +38,10 @@ const Dialog = ({ conversation, onClose }) => {
 
   useEffect(() => {
     if (currentUserInfo && conversation) {
+      console.log(conversation)
       const messagesRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/users/${conversation.id}`);
+     
+
       onValue(messagesRef, (snapshot) => {
         const messagesData = snapshot.val();
         if (messagesData) {
@@ -50,7 +53,20 @@ const Dialog = ({ conversation, onClose }) => {
           }));
           setMessages(messagesList);
         }
+
+        
       });
+
+      // onValue(chatsRef, (snapshot) => {
+      //   const chatsData = snapshot.val();
+      //   if (chatsData) {
+      //     const chatsList = Object.keys(chatsData).map((chatID) => ({
+      //       id: chatID
+      //     }));
+      //     setChats(chatsData);
+      //     console.log("chatsData: ",chatsData)
+      //   }
+      // })
 
       const interlocutorRef = ref(db, `users/${conversation.id}`);
       onValue(interlocutorRef, (snapshot) => {
