@@ -1,5 +1,5 @@
+// styled.js
 import styled from 'styled-components';
-import { centerByFlexColumn, defaultFont } from 'theme/globalStyles';
 import { colors } from 'theme/colorsPallete';
 
 export const DialogContainer = styled.div`
@@ -39,6 +39,12 @@ export const MessagesContainer = styled.div`
     background: #555; /* Цвет ползунка при наведении */
   }
 `;
+export const TheirMessageInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 5px;
+`;
 
 export const MessageItem = styled.div`
   display: flex;
@@ -56,12 +62,22 @@ export const MessageItem = styled.div`
   }
 `;
 
+
 export const AvatarLink = styled.div`
   text-decoration: none;
   color: inherit;
   display: flex;
   align-items: center;
   margin-bottom: 5px;
+  justify-content: flex-end; /* Выравнивание аватара и никнейма по правому краю */
+
+  &.mine {
+    justify-content: flex-end; /* Выравнивание аватара и никнейма по правому краю для моих сообщений */
+  }
+
+  &.theirs {
+    justify-content: flex-start; /* Выравнивание аватара и никнейма по левому краю для сообщений собеседника */
+  }
 `;
 
 export const Avatar = styled.img`
@@ -76,11 +92,26 @@ export const Username = styled.div`
 `;
 
 export const MessageContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  white-space: pre-wrap;
+  display: inline-block;
+  background-color: ${colors.lightGray};
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 5px;
+  color: ${colors.black};
   width: 100%;
+
+  &.mine {
+    align-self: flex-start;
+    background-color: ${colors.blue};
+    color: ${colors.white};
+  }
+
+  &.theirs {
+    align-self: flex-start; /* Устанавливаем выравнивание по левому краю для сообщений собеседника */
+  }
 `;
+
+
 
 export const InputContainer = styled.div`
   display: flex;

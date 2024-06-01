@@ -18,7 +18,8 @@ import {
   MessageInput, 
   ButtonContainer, 
   SendButton, 
-  CloseButton 
+  CloseButton, 
+  TheirMessageInfo
 } from './styled';
 
 const Dialog = ({ conversation, onClose }) => {
@@ -31,7 +32,7 @@ const Dialog = ({ conversation, onClose }) => {
   // Функция скроллинга
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
+      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
     }
   }, []);
 
@@ -60,7 +61,7 @@ const Dialog = ({ conversation, onClose }) => {
   }, [conversation, currentUserInfo]);
 
   useEffect(() => {
-    scrollToBottom(); 
+    scrollToBottom(); // Прокрутка до последнего сообщения 
   }, [messages, scrollToBottom]);
 
   const handleSendMessage = () => {
@@ -69,37 +70,46 @@ const Dialog = ({ conversation, onClose }) => {
     setNewMessageText('');
   };
 
+  // отрисовка аватара
+  const renderInterlocutorInfo = (message) => {
+    if (message.sender !== currentUserInfo.userId) {
+      return (
+        <TheirMessageInfo>
+          <AvatarLink>
+            <Link to={`/profile/${interlocutorInfo.userlink}`}>
+              <Avatar src={interlocutorInfo.avatar} alt="Avatar" />
+            </Link>
+            <Username>{interlocutorInfo.username}</Username>
+          </AvatarLink>
+        </TheirMessageInfo>
+      );
+    }
+    return null;
+  };
+
   return (
     <DialogContainer>
       <h2>Dialog with {interlocutorInfo ? interlocutorInfo.username : 'Loading...'}</h2>
       <MessagesContainer>
-        {messages.map((message) => (
-          <MessageItem key={message.id} className={message.sender === currentUserInfo.userId ? 'mine' : 'theirs'}>
-            {message.sender === currentUserInfo.userId ? (
-              <>
-                <AvatarLink>
-                  <Link to={`/profile/${currentUserInfo.userlink}`}>
-                    <Avatar src={currentUserInfo.avatar} alt="Avatar" />
-                  </Link>
-                  <Username>{currentUserInfo.username}</Username>
-                </AvatarLink>
-                <MessageContent>{message.text}</MessageContent>
-              </>
-            ) : (
-              <>
-                <AvatarLink>
-                  <Link to={`/profile/${interlocutorInfo.userlink}`}>
-                    <Avatar src={interlocutorInfo.avatar} alt="Avatar" />
-                  </Link>
-                  <Username>{interlocutorInfo.username}</Username>
-                </AvatarLink>
-                <MessageContent>{message.text}</MessageContent>
-              </>
-            )}
-          </MessageItem>
-        ))}
-        <div ref={messagesEndRef} />
-      </MessagesContainer>
+      {messages.map((message) => (
+        <MessageItem key={message.id} className={message.sender === currentUserInfo.userId ? 'mine' : 'theirs'}>
+          {message.sender !== currentUserInfo.userId && (
+            <TheirMessageInfo>
+              <AvatarLink>
+                <Link to={`/profile/${interlocutorInfo.userlink}`}>
+                  <Avatar src={interlocutorInfo.avatar} alt="Avatar" />
+                </Link>
+                <Username>{interlocutorInfo.username}</Username>
+              </AvatarLink>
+            </TheirMessageInfo>
+          )}
+          <MessageContent className={message.sender === currentUserInfo.userId ? 'mine' : 'theirs'}>
+            {message.text}
+          </MessageContent>
+        </MessageItem>
+      ))}
+      <div ref={messagesEndRef} />
+    </MessagesContainer>
       <InputContainer>
         <MessageInput
           value={newMessageText}

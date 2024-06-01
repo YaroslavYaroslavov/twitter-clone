@@ -1,14 +1,15 @@
 import CreateConversation from 'components/CreateConversation/index';
 import Dialog from 'components/Dialog';
-import { onValue,ref } from 'firebase/database';
+import { ButtonTweet } from 'components/Navbar/styled';
+import { onValue, ref } from 'firebase/database';
 import { db } from 'firebaseConfig/firebase';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const Messages = () => {
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
-  const [interlocutors, setInterlocutors] = useState({}); // Состояние для хранения информации о собеседниках
+  const [interlocutors, setInterlocutors] = useState({});
   const [isCreatingConversation, setIsCreatingConversation] = useState(false); // Состояние для отслеживания создания беседы
   const [availableUsers, setAvailableUsers] = useState([]);
 
@@ -73,29 +74,38 @@ const Messages = () => {
 
   const handleConversationCreated = (newConversationId) => {
     setIsCreatingConversation(false);
+    setConversations((prevConversations) => [
+      ...prevConversations,
+      { id: newConversationId, name: 'Новый чат', lastMessage: '' },
+    ]);
   };
-
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', padding: '10px', border: '1px solid #ccc', borderRadius: '10px', marginTop: '20px' }}>
       <div style={{ padding: '5px', marginRight: '10px', borderRight: '1px solid #ccc', overflowY: 'auto', height: 'calc(100vh - 100px)' }}>
-        {conversations.map((conversation) => {
-          const interlocutorInfo = interlocutors[conversation.id];   
-           console.log(interlocutorInfo.avatar)
-          return (
-            <div key={conversation.id} onClick={() => handleConversationClick(conversation)} style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px', marginBottom: '10px', cursor: 'pointer', backgroundColor: '#f8f8f8', display: 'flex', alignItems: 'center', paddingLeft: '10px' }}>
-              {interlocutorInfo && (
-                <>
-                  <img src={interlocutorInfo.avatar} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} />
-                  <div>
-                    <h2 style={{ margin: 0, fontSize: '16px' }}>{interlocutorInfo.username}</h2>
-                    <p style={{ margin: 0, fontSize: '14px' }}>{conversation.lastMessage}</p>
-                  </div>
-                </>
-              )}
-            </div>
-          );
-        })}
+        {isCreatingConversation ? (
+          <CreateConversation
+            onConversationCreated={handleConversationCreated}
+            availableUsers={availableUsers}
+          />
+        ) : (
+          conversations.map((conversation) => {
+            const interlocutorInfo = interlocutors[conversation.id];
+            return (
+              <div key={conversation.id} onClick={() => handleConversationClick(conversation)} style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px', marginBottom: '10px', cursor: 'pointer', backgroundColor: '#f8f8f8', display: 'flex', alignItems: 'center', paddingLeft: '10px' }}>
+                {interlocutorInfo && (
+                  <>
+                    <img src={interlocutorInfo.avatar} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} />
+                    <div>
+                      <h2 style={{ margin: 0, fontSize: '16px' }}>{interlocutorInfo.username}</h2>
+                      <p style={{ margin: 0, fontSize: '14px' }}>{conversation.lastMessage}</p>
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })
+        )}
       </div>
       <div style={{ padding: '10px' }}>
         {selectedConversation && (
@@ -105,15 +115,11 @@ const Messages = () => {
           />
         )}
         {!selectedConversation && !isCreatingConversation && (
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-            <button onClick={handleCreateConversation}>Создать беседу</button>
+          <div style={{ position: 'absolute', top: '45%', left: '54%', transform: 'translate(-50%, -50%)' }}>
+            <ButtonTweet onClick={handleCreateConversation} style={{ width: '150px', height: '40px', fontSize: '14px' }}>
+              Создать беседу
+            </ButtonTweet>
           </div>
-        )}
-        {isCreatingConversation && (
-          <CreateConversation
-            onConversationCreated={handleConversationCreated}
-            availableUsers={availableUsers}
-          />
         )}
       </div>
     </div>
