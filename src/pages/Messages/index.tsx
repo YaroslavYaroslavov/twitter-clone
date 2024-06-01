@@ -12,9 +12,9 @@ const Messages = () => {
   const [interlocutors, setInterlocutors] = useState({});
   const [isCreatingConversation, setIsCreatingConversation] = useState(false); // Состояние для отслеживания создания беседы
   const [availableUsers, setAvailableUsers] = useState([]);
-  const [chats, setChats] = useState([])
+  const [chats, setChats] = useState([]);
 
-  const currentUserInfo = useSelector(state => state.userInfo);
+  const currentUserInfo = useSelector((state) => state.userInfo);
 
   useEffect(() => {
     if (currentUserInfo && currentUserInfo.userId) {
@@ -33,7 +33,7 @@ const Messages = () => {
           // Загрузка информации о собеседниках
           const newInterlocutors = {};
           conversationsList.forEach((conversation) => {
-            console.log('conversation: ', conversation)
+            console.log('conversation: ', conversation);
             const interlocutorRef = ref(db, `users/${conversation.id}`);
             onValue(interlocutorRef, (snapshot) => {
               const interlocutorData = snapshot.val();
@@ -49,18 +49,23 @@ const Messages = () => {
   useEffect(() => {
     if (currentUserInfo && currentUserInfo.userId) {
       const messagesRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/users`);
-      const chatsRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/chats`)
+      const chatsRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/chats`);
 
       onValue(chatsRef, (snapshot) => {
         const chatsData = snapshot.val();
         if (chatsData) {
-          const chatsList = Object.keys(chatsData).map((chatID) => ({
-            id: chatID
+          console.log('chatsData:', chatsData);
+
+          const chatsList = Object.keys(chatsData).map((key) => ({
+            id: key,
+            name: chatsData[key].name,
+            users: chatsData[key].users,
           }));
-          setChats(chatsData);
-          console.log("chatsData: ",chatsData)
+
+          setChats(chatsList);
+          console.log('chatsData: ', chatsData);
         }
-      })
+      });
       onValue(messagesRef, (snapshot) => {
         const conversationsData = snapshot.val();
         if (conversationsData) {
@@ -96,48 +101,101 @@ const Messages = () => {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', padding: '10px', border: '1px solid #ccc', borderRadius: '10px', marginTop: '20px' }}>
-      <div style={{ padding: '5px', marginRight: '10px', borderRight: '1px solid #ccc', overflowY: 'auto', height: 'calc(100vh - 100px)' }}>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '200px 1fr',
+        padding: '10px',
+        border: '1px solid #ccc',
+        borderRadius: '10px',
+        marginTop: '20px',
+      }}
+    >
+      <div
+        style={{
+          padding: '5px',
+          marginRight: '10px',
+          borderRight: '1px solid #ccc',
+          overflowY: 'auto',
+          height: 'calc(100vh - 100px)',
+        }}
+      >
         {isCreatingConversation ? (
           <CreateConversation
             onConversationCreated={handleConversationCreated}
             availableUsers={availableUsers}
           />
         ) : (
-          conversations.map((conversation) => {
-            const interlocutorInfo = interlocutors[conversation.id];
-            return (
-              <div key={conversation.id} onClick={() => handleConversationClick(conversation)} style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px', marginBottom: '10px', cursor: 'pointer', backgroundColor: '#f8f8f8', display: 'flex', alignItems: 'center', paddingLeft: '10px' }}>
-                {interlocutorInfo && (
-                  <>
-                    <img src={interlocutorInfo.avatar} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px' }} />
-                    <div>
-                      <h2 style={{ margin: 0, fontSize: '16px' }}>{interlocutorInfo.username}</h2>
-                      {/* <p style={{ margin: 0, fontSize: '14px' }}>{conversation.lastMessage}</p> */}
-                    </div>
-                  </>
-                )}
-              </div>
-            );
-
-
-          })
-         
-
+          <>
+            <>
+              {conversations.map((conversation) => {
+                const interlocutorInfo = interlocutors[conversation.id];
+                return (
+                  <div
+                    key={conversation.id}
+                    onClick={() => handleConversationClick(conversation)}
+                    style={{
+                      borderBottom: '1px solid #ccc',
+                      paddingBottom: '10px',
+                      marginBottom: '10px',
+                      cursor: 'pointer',
+                      backgroundColor: '#f8f8f8',
+                      display: 'flex',
+                      alignItems: 'center',
+                      paddingLeft: '10px',
+                    }}
+                  >
+                    {interlocutorInfo && (
+                      <>
+                        <img
+                          src={interlocutorInfo.avatar}
+                          alt="Avatar"
+                          style={{
+                            width: '30px',
+                            height: '30px',
+                            borderRadius: '50%',
+                            marginRight: '10px',
+                          }}
+                        />
+                        <div>
+                          <h2 style={{ margin: 0, fontSize: '16px' }}>
+                            {interlocutorInfo.username}
+                          </h2>
+                          {/* <p style={{ margin: 0, fontSize: '14px' }}>{conversation.lastMessage}</p> */}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </>
+            <>
+              {console.log(chats)}
+              {chats.map((chat) => (
+                <div key={chat.id}>{chat.name}</div>
+              ))}
+            </>
+          </>
         )}
-        
       </div>
-      {/* <hr></hr> */}
+
       <div style={{ padding: '10px' }}>
         {selectedConversation && (
-          <Dialog
-            conversation={selectedConversation}
-            onClose={handleDialogClose}
-          />
+          <Dialog conversation={selectedConversation} onClose={handleDialogClose} />
         )}
         {!selectedConversation && !isCreatingConversation && (
-          <div style={{ position: 'absolute', top: '45%', left: '54%', transform: 'translate(-50%, -50%)' }}>
-            <ButtonTweet onClick={handleCreateConversation} style={{ width: '150px', height: '40px', fontSize: '14px' }}>
+          <div
+            style={{
+              position: 'absolute',
+              top: '45%',
+              left: '54%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            <ButtonTweet
+              onClick={handleCreateConversation}
+              style={{ width: '150px', height: '40px', fontSize: '14px' }}
+            >
               Создать беседу
             </ButtonTweet>
           </div>
