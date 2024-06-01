@@ -51,19 +51,35 @@ const Messages = () => {
       const messagesRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/users`);
       const chatsRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/chats`);
 
+      // onValue(chatsRef, (snapshot) => {
+      //   const chatsData = snapshot.val();
+      //   if (chatsData) {
+      //     console.log('chatsData:', chatsData);
+
+      //     const chatsList = Object.keys(chatsData).map((key) => ({
+      //       id: key,
+      //       name: chatsData[key].name,
+      //       users: chatsData[key].users,
+      //     }));
+
+      //     setChats(chatsList);
+      //     console.log('chatsData: ', chatsData);
+      //   }
+      // });
       onValue(chatsRef, (snapshot) => {
         const chatsData = snapshot.val();
         if (chatsData) {
-          console.log('chatsData:', chatsData);
-
-          const chatsList = Object.keys(chatsData).map((key) => ({
-            id: key,
-            name: chatsData[key].name,
-            users: chatsData[key].users,
-          }));
-
+          const chatsList = Object.keys(chatsData).map((userId) => {
+            const chatId = Object.keys(chatsData[userId])[0]; // Получаем идентификатор чата
+            const chatName = chatsData[userId][chatId].name; // Получаем название чата
+            return {
+              id: chatId,
+              name: chatName,
+              users: chatsData[userId][chatId].users,
+            };
+          });
+      
           setChats(chatsList);
-          console.log('chatsData: ', chatsData);
         }
       });
       onValue(messagesRef, (snapshot) => {
@@ -170,10 +186,28 @@ const Messages = () => {
               })}
             </>
             <>
-              {console.log(chats)}
-              {chats.map((chat) => (
-                <div key={chat.id}>{chat.name}</div>
-              ))}
+            {chats.map((chat) => (
+              <div
+                key={chat.id}
+                onClick={() => handleConversationClick(chat)}
+                style={{
+                  borderBottom: '1px solid #ccc',
+                  paddingBottom: '10px',
+                  marginBottom: '10px',
+                  cursor: 'pointer',
+                  backgroundColor: '#f8f8f8',
+                  display: 'flex',
+                  alignItems: 'center',
+                  paddingLeft: '10px',
+                }}
+              >
+                <div>
+                  <h2 style={{ margin: 0, fontSize: '16px' }}>
+                    {chat.name} 
+                  </h2>
+                </div>
+              </div>
+            ))}
             </>
           </>
         )}

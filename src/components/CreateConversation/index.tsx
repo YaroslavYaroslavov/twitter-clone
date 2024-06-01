@@ -5,9 +5,9 @@ import { db } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
 import { ButtonTweet } from 'components/Navbar/styled';
 
-const CreateConversation = ({ onConversationCreated, availableUsers}) => {
+const CreateConversation = ({ onConversationCreated, availableUsers }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [conversationName, setConversationName] = useState(''); 
+  const [conversationName, setConversationName] = useState('');
   const currentUserInfo = useSelector(state => state.userInfo);
   const users = useSelector((state: StateInterface) => state.users);
 
@@ -31,10 +31,12 @@ const CreateConversation = ({ onConversationCreated, availableUsers}) => {
         users: {},
       };
 
+      const newConversationKey = push(ref(db, 'message/usersWithMessage/')).key;
+
       selectedUsers.forEach((user) => {
         const recipientUserId = user.id;
-        const senderConversationRef = ref(db, `message/usersWithMessage/${senderUserId}/chats/${recipientUserId}`);
-        const recipientConversationRef = ref(db, `message/usersWithMessage/${recipientUserId}/chats/${senderUserId}`);
+        const senderConversationRef = ref(db, `message/usersWithMessage/${senderUserId}/chats/${recipientUserId}/${newConversationKey}`);
+        const recipientConversationRef = ref(db, `message/usersWithMessage/${recipientUserId}/chats/${senderUserId}/${newConversationKey}`);
 
         newConversationData.users[recipientUserId] = {
           lastMessage: '',
