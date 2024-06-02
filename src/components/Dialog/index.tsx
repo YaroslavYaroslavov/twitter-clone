@@ -32,7 +32,7 @@ const Dialog = ({ conversation, onClose }) => {
   // Функция скроллинга
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+      messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
     }
   }, []);
 
@@ -57,16 +57,7 @@ const Dialog = ({ conversation, onClose }) => {
         
       });
 
-      // onValue(chatsRef, (snapshot) => {
-      //   const chatsData = snapshot.val();
-      //   if (chatsData) {
-      //     const chatsList = Object.keys(chatsData).map((chatID) => ({
-      //       id: chatID
-      //     }));
-      //     setChats(chatsData);
-      //     console.log("chatsData: ",chatsData)
-      //   }
-      // })
+  
 
       const interlocutorRef = ref(db, `users/${conversation.id}`);
       onValue(interlocutorRef, (snapshot) => {
@@ -102,10 +93,10 @@ const Dialog = ({ conversation, onClose }) => {
     }
     return null;
   };
-
+  console.log( conversation?.name)
   return (
     <DialogContainer>
-      <h2>Dialog with {interlocutorInfo ? interlocutorInfo.username : 'Loading...'}</h2>
+      <h2>Dialog with { interlocutorInfo?.username || conversation?.name ||  'Loading...'}</h2>
       <MessagesContainer>
       {messages.map((message) => (
         <MessageItem key={message.id} className={message.sender === currentUserInfo.userId ? 'mine' : 'theirs'}>
