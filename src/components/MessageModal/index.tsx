@@ -8,7 +8,7 @@ export const MessageModal = ({ active, setActive, recipientUserId, senderUserId 
 
   const handleSendMessage = () => {
     if (messageText.trim() !== '') {
-      sendMessage(messageText, recipientUserId, senderUserId);
+      sendMessage(messageText, recipientUserId, senderUserId, true);
       setMessageText('');
       setActive(false);
     }

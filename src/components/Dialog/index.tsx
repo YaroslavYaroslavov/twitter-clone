@@ -21,7 +21,7 @@ import {
   CloseButton, 
   TheirMessageInfo
 } from './styled';
-
+ 
 const Dialog = ({ conversation, onClose }) => {
   const [messages, setMessages] = useState([]);
   const [newMessageText, setNewMessageText] = useState('');
@@ -38,34 +38,32 @@ const Dialog = ({ conversation, onClose }) => {
 
   useEffect(() => {
     if (currentUserInfo && conversation) {
-      console.log(conversation)
-      const messagesRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/users/${conversation.id}`);
-     
-
-      onValue(messagesRef, (snapshot) => {
-        const messagesData = snapshot.val();
-        if (messagesData) {
-          const messagesList = Object.keys(messagesData).map((messageId) => ({
-            id: messageId,
-            text: messagesData[messageId].text,
-            sender: messagesData[messageId].sender,
-            timestamp: messagesData[messageId].timestamp,
-          }));
-          setMessages(messagesList);
-        }
-
-        
-      });
-
+      setMessages([])
+      const messagesRef = conversation.name ? ref(db, `message/usersWithMessage/${currentUserInfo.userId}/chats/${conversation.id}/messages`): ref(db, `message/usersWithMessage/${currentUserInfo.userId}/users/${conversation.id}`) 
+        onValue(messagesRef, (snapshot) => {
+          
+          const messagesData = snapshot.val()
+          
+          if (messagesData) {
+            const messagesList = Object.keys(messagesData).map((messageId) => ({
+              id: messageId,
+              text: messagesData[messageId].text,
+              sender: messagesData[messageId].sender,
+              timestamp: messagesData[messageId].timestamp,
+            }));
+            setMessages(messagesList);
+          } 
   
-
-      const interlocutorRef = ref(db, `users/${conversation.id}`);
-      onValue(interlocutorRef, (snapshot) => {
-        const interlocutorData = snapshot.val();
-        setInterlocutorInfo(interlocutorData);
-      });
-    }
-  }, [conversation, currentUserInfo]);
+        });
+    
+        const interlocutorRef = ref(db, `users/${conversation.id}`);
+        onValue(interlocutorRef, (snapshot) => {
+          const interlocutorData = snapshot.val();
+          setInterlocutorInfo(interlocutorData);
+        });
+      }
+     
+  }, [conversation]);
 
   useEffect(() => {
     scrollToBottom(); // Прокрутка до последнего сообщения 
@@ -73,32 +71,18 @@ const Dialog = ({ conversation, onClose }) => {
 
   const handleSendMessage = () => {
     if (newMessageText.trim() === '') return;
-    sendMessage(newMessageText, conversation.id, currentUserInfo.userId);
-    setNewMessageText('');
-  };
+    // console.log(newMessageText, conversation.id, currentUserInfo.userId, !conversation.name)
+    sendMessage(newMessageText, conversation.id, currentUserInfo.userId, !conversation.name);
 
-  // отрисовка аватара
-  const renderInterlocutorInfo = (message) => {
-    if (message.sender !== currentUserInfo.userId) {
-      return (
-        <TheirMessageInfo>
-          <AvatarLink>
-            <Link to={`/profile/${interlocutorInfo.userlink}`}>
-              <Avatar src={interlocutorInfo.avatar} alt="Avatar" />
-            </Link>
-            <Username>{interlocutorInfo.username}</Username>
-          </AvatarLink>
-        </TheirMessageInfo>
-      );
-    }
-    return null;
-  };
-  console.log( conversation?.name)
+    setNewMessageText('');
+  };  
+
+  
   return (
     <DialogContainer>
       <h2>Dialog with { interlocutorInfo?.username || conversation?.name ||  'Loading...'}</h2>
       <MessagesContainer>
-      {messages.map((message) => (
+      {messages.length ? messages.map((message) => (
         <MessageItem key={message.id} className={message.sender === currentUserInfo.userId ? 'mine' : 'theirs'}>
           {message.sender !== currentUserInfo.userId && (
             <TheirMessageInfo>
@@ -114,7 +98,7 @@ const Dialog = ({ conversation, onClose }) => {
             {message.text}
           </MessageContent>
         </MessageItem>
-      ))}
+      )) : 'пока пусто'}
       <div ref={messagesEndRef} />
     </MessagesContainer>
       <InputContainer>

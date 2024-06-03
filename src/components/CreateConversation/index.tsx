@@ -23,43 +23,27 @@ const CreateConversation = ({ onConversationCreated, availableUsers }) => {
   };
 
   const handleCreateConversation = () => {
+    
+    
+
     if (selectedUsers.length > 0 && conversationName.trim() !== '') {
-      const senderUserId = currentUserInfo.userId;
 
       const newConversationData = {
         name: conversationName,
-        users: {},
+        users: [...selectedUsers.map(user => user.id), currentUserInfo.userId ],
       };
 
       const newConversationKey = push(ref(db, 'message/usersWithMessage/')).key;
+  
+  
+      newConversationData.users.forEach((userID) => {
+      
+          const conversationRef = ref(db, `message/usersWithMessage/${userID}/chats/${newConversationKey}`)
+        
+          set(conversationRef, newConversationData)
+          onConversationCreated()
+      } )
 
-      selectedUsers.forEach((user) => {
-        const recipientUserId = user.id;
-        const senderConversationRef = ref(db, `message/usersWithMessage/${senderUserId}/chats/${recipientUserId}/${newConversationKey}`);
-        const recipientConversationRef = ref(db, `message/usersWithMessage/${recipientUserId}/chats/${senderUserId}/${newConversationKey}`);
-
-        newConversationData.users[recipientUserId] = {
-          lastMessage: '',
-          sender: senderUserId,
-          timestamp: Date.now(),
-        };
-
-        set(senderConversationRef, newConversationData)
-          .then(() => {
-            console.log('Conversation data written successfully for sender.');
-            set(recipientConversationRef, newConversationData)
-              .then(() => {
-                console.log('Conversation data written successfully for recipient.');
-                onConversationCreated(recipientUserId);
-              })
-              .catch((error) => {
-                console.error('Error writing conversation data for recipient:', error);
-              });
-          })
-          .catch((error) => {
-            console.error('Error writing conversation data for sender:', error);
-          });
-      });
     }
   };
 

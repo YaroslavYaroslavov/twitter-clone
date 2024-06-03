@@ -71,7 +71,7 @@ function App() {
             navigate(feed);
         }
     }, [user, loading]);
-    console.log(user);
+   
     return (React.createElement(ErrorBoundary, null,
         React.createElement("div", { id: "recaptcha-container" }),
         React.createElement(AppContainer, null,
