@@ -3,7 +3,7 @@ import { StateInterface } from 'interface';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { FindInput, RecomendationContainer, SearchSectionContainer } from './styled';
+import { FindInput, RecomendationContainer, SearchResultContainer, SearchSectionContainer } from './styled';
 
 export const SearchSection = () => {
   const users = useSelector((state: StateInterface) => state.users) || [];
@@ -14,7 +14,7 @@ export const SearchSection = () => {
 
   const [userRecomendation, setUserRecomendation] = useState<string[]>([]);
 
-  
+  console.log(users)
 
   const handleInputChange = e => {
     setInputValue(e.target.value)
@@ -66,15 +66,18 @@ export const SearchSection = () => {
   return (
     <SearchSectionContainer>
       <FindInput value={inputValue} onChange={handleInputChange} type="text" placeholder="Поиск пользователей" />
-      {inputValue ? <div>{inputValue}</div> : <></>}
-      <RecomendationContainer>
+      {inputValue ? <RecomendationContainer>
+        <h1>Результат поиска:</h1>
+       {users.filter(user => user.username.toLowerCase().includes(inputValue.toLowerCase())).map(el => <Recomendation key={el.userId} userId={el.userId} />)}
+      </RecomendationContainer> :   <RecomendationContainer>
         <h1>Вас может заинтересовать</h1>
         {[...new Set(userRecomendation)].map((userId) => (
           <Recomendation key={userId} userId={userId} />
         ))}
 
      
-      </RecomendationContainer>
+      </RecomendationContainer>}
+    
     </SearchSectionContainer>
   );
 };

@@ -82,7 +82,11 @@ const Dialog = ({ conversation, onClose }) => {
   
   return (
     <DialogContainer>
-      <h2>Dialog with { interlocutorInfo?.username || conversation?.name ||  'Loading...'}</h2>
+      {interlocutorInfo?.username ? <h2>Чат с {interlocutorInfo?.username}</h2> :
+       conversation?.name ?  <h2>Беседа {conversation?.name}</h2> : 
+       <h2>Загрузка...</h2>
+      }
+
       <MessagesContainer>
       {messages.length ? messages.map((message) => {
         const messageSender = users.find(user => user.userId === message.sender)
@@ -115,8 +119,8 @@ const Dialog = ({ conversation, onClose }) => {
           placeholder="Type a message..."
         />
         <ButtonContainer>
-          <SendButton onClick={handleSendMessage}>Send</SendButton>
-          <CloseButton onClick={onClose}>Close</CloseButton>
+          <SendButton onClick={handleSendMessage}>Отправить</SendButton>
+          <CloseButton onClick={onClose}>Закрыть</CloseButton>
         </ButtonContainer>
       </InputContainer>
     </DialogContainer>

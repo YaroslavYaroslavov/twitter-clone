@@ -38,6 +38,7 @@ export const ProfileInfoContainer = styled.section`
   justify-content: space-between;
   margin-left: 20px;
   margin-right: 20px;
+  margin-bottom: 40px;
 `;
 
 export const EditProfileButton = styled.button`

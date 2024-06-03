@@ -1,14 +1,14 @@
 import background from 'assets/userbackgrounddefault.png';
 import userImgBig from 'assets/userImageBig.png';
 import { CreatePost } from 'components/CreatePost';
-import { Modal } from 'components/Modal';
 import { MessageModal } from 'components/MessageModal';
+import { Modal } from 'components/Modal';
 import { Post } from 'components/Post';
 import { ref, remove, set, update } from 'firebase/database';
 import { getDownloadURL, ref as refStorage, uploadBytes } from 'firebase/storage';
 import { db, storage } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect,useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -171,7 +171,7 @@ export const Profile = () => {
           <Header>
             <h2>{currentUserPage?.username}</h2>
             <Description>
-              {(authorPosts && Object.keys(authorPosts).length) || 0} tweets
+              {(authorPosts && Object.keys(authorPosts).length) || 0} публикаций
             </Description>
           </Header>
           <BackgroundImg src={background} alt="" />
@@ -228,7 +228,7 @@ export const Profile = () => {
       </ProfileContainer>
       <Modal active={modalActive} setActive={setModalActive}>
         <EditUserData>
-          <h2>Edit your data:</h2>
+          <h2>Редактирование</h2>
           <EditUserAvatar onClick={handleFileUploadClick}>
             <input
               type="file"

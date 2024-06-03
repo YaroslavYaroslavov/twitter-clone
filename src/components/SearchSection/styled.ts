@@ -43,5 +43,7 @@ export const SearchResultContainer = styled.div`
   border: none;
   background-color: #eff3f4;
 
+  ${flexColumn};
   ${defaultFont};
 `;
+

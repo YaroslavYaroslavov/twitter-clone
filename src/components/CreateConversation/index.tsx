@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { ref, push, set } from 'firebase/database';
+import { CloseButton } from 'components/Dialog/styled';
+import { ButtonTweet } from 'components/Navbar/styled';
+import { push, ref, set } from 'firebase/database';
 import { db } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
-import { ButtonTweet } from 'components/Navbar/styled';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
-const CreateConversation = ({ onConversationCreated, availableUsers }) => {
+const CreateConversation = ({ onConversationCreated, availableUsers, handleDialogClose }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [conversationName, setConversationName] = useState('');
   const currentUserInfo = useSelector(state => state.userInfo);
@@ -89,6 +90,7 @@ const CreateConversation = ({ onConversationCreated, availableUsers }) => {
       >
         Создать чат
       </ButtonTweet>
+      
     </div>
   );
 };

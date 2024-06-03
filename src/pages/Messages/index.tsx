@@ -1,5 +1,6 @@
 import CreateConversation from 'components/CreateConversation/index';
 import Dialog from 'components/Dialog';
+import { CloseButton } from 'components/Dialog/styled';
 import { ButtonTweet } from 'components/Navbar/styled';
 import { onValue, ref } from 'firebase/database';
 import { db } from 'firebaseConfig/firebase';
@@ -122,6 +123,7 @@ const Messages = () => {
         {isCreatingConversation ? (
           <CreateConversation
             onConversationCreated={handleConversationCreated}
+            handleDialogClose={handleDialogClose}
             availableUsers={availableUsers}
           />
         ) : (
@@ -209,7 +211,7 @@ const Messages = () => {
         {selectedConversation && (
           <Dialog conversation={selectedConversation} onClose={handleDialogClose} />
         )}
-        {!selectedConversation && !isCreatingConversation && (
+        {!selectedConversation && (
           <div
             style={{
               position: 'absolute',
@@ -218,12 +220,13 @@ const Messages = () => {
               transform: 'translate(-50%, -50%)',
             }}
           >
-            <ButtonTweet
+            {isCreatingConversation ? <CloseButton onClick={handleConversationCreated}>Отменить</CloseButton> : <ButtonTweet
               onClick={handleCreateConversation}
               style={{ width: '150px', height: '40px', fontSize: '14px' }}
             >
               Создать беседу
-            </ButtonTweet>
+            </ButtonTweet>}
+        
           </div>
         )}
       </div>

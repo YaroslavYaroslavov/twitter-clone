@@ -7,7 +7,7 @@ import { centerByFlex, defaultFont } from 'theme/globalStyles';
 export const CreatePostContainer = styled.section`
   display: flex;
   padding: 15px;
-  margin-top: 40px;
+  /* margin-top: 40px; */
   border-top: 3px solid ${colors.border};
   border-bottom: 3px solid ${colors.border};
 `;
