@@ -26,6 +26,7 @@ const Dialog = ({ conversation, onClose }) => {
   const [messages, setMessages] = useState([]);
   const [newMessageText, setNewMessageText] = useState('');
   const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
+  const users = useSelector((state: StateInterface) => state.users)
   const [interlocutorInfo, setInterlocutorInfo] = useState(null);
   const messagesEndRef = useRef(null); 
 
@@ -56,11 +57,11 @@ const Dialog = ({ conversation, onClose }) => {
   
         });
     
-        const interlocutorRef = ref(db, `users/${conversation.id}`);
-        onValue(interlocutorRef, (snapshot) => {
-          const interlocutorData = snapshot.val();
-          setInterlocutorInfo(interlocutorData);
-        });
+        // const interlocutorRef = ref(db, `users/${conversation.id}`);
+        // onValue(interlocutorRef, (snapshot) => {
+        //   const interlocutorData = snapshot.val();
+        //   setInterlocutorInfo(interlocutorData);
+        // });
       }
      
   }, [conversation]);
@@ -77,28 +78,34 @@ const Dialog = ({ conversation, onClose }) => {
     setNewMessageText('');
   };  
 
+
   
   return (
     <DialogContainer>
       <h2>Dialog with { interlocutorInfo?.username || conversation?.name ||  'Loading...'}</h2>
       <MessagesContainer>
-      {messages.length ? messages.map((message) => (
-        <MessageItem key={message.id} className={message.sender === currentUserInfo.userId ? 'mine' : 'theirs'}>
-          {message.sender !== currentUserInfo.userId && (
-            <TheirMessageInfo>
-              <AvatarLink>
-                <Link to={`/profile/${interlocutorInfo.userlink}`}>
-                  <Avatar src={interlocutorInfo.avatar} alt="Avatar" />
-                </Link>
-                <Username>{interlocutorInfo.username}</Username>
-              </AvatarLink>
-            </TheirMessageInfo>
-          )}
-          <MessageContent className={message.sender === currentUserInfo.userId ? 'mine' : 'theirs'}>
-            {message.text}
-          </MessageContent>
-        </MessageItem>
-      )) : 'пока пусто'}
+      {messages.length ? messages.map((message) => {
+        const messageSender = users.find(user => user.userId === message.sender)
+      
+    return  (
+      <MessageItem key={messageSender.userId} className={messageSender.userId === currentUserInfo.userId ? 'mine' : 'theirs'}>
+      {messageSender.userId !== currentUserInfo.userId && (
+        <TheirMessageInfo>
+          <AvatarLink>
+            <Link to={`/profile/${messageSender.userlink}`}>
+              <Avatar src={messageSender.avatar} alt="Avatar" />
+            </Link>
+            <Username>{messageSender.username}</Username>
+          </AvatarLink>
+        </TheirMessageInfo>
+      )}
+      <MessageContent className={message.sender === currentUserInfo.userId ? 'mine' : 'theirs'}>
+        {message.text}
+      </MessageContent>
+    </MessageItem>
+    )
+       
+}) : 'пока пусто'}
       <div ref={messagesEndRef} />
     </MessagesContainer>
       <InputContainer>
