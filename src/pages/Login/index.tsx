@@ -58,7 +58,7 @@ export const Login = () => {
   };
 
   return (
-    <AuthForm headerText="Log in to Twitter">
+    <AuthForm headerText="Войти в TravelCrew">
       <StyledLoginForm onSubmit={handleSubmit(submit)}>
         <AuthInput
           placeholder={loginPlaceholder}

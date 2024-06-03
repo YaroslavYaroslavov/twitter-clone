@@ -23,7 +23,7 @@ export const MessageModal = ({ active, setActive, recipientUserId, senderUserId 
           onChange={(e) => setMessageText(e.target.value)}
           placeholder="Напишите сообщение..."
         />
-        <SendButton onClick={handleSendMessage}>Send</SendButton>
+        <SendButton onClick={handleSendMessage}>Отправить</SendButton>
       </MessageModalData>
     </Modal>
   );

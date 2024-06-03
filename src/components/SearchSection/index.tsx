@@ -3,13 +3,23 @@ import { StateInterface } from 'interface';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { FindInput, RecomendationContainer, SearchSectionContainer, Showmore } from './styled';
+import { FindInput, RecomendationContainer, SearchSectionContainer } from './styled';
 
 export const SearchSection = () => {
-  const users = useSelector((state: StateInterface) => state.users);
+  const users = useSelector((state: StateInterface) => state.users) || [];
+
   const userInfo = useSelector((state: StateInterface) => state.userInfo);
+  const [inputValue, setInputValue] = useState('')
+
 
   const [userRecomendation, setUserRecomendation] = useState<string[]>([]);
+
+  
+
+  const handleInputChange = e => {
+    setInputValue(e.target.value)
+    console.log(e.target.value)
+  } 
 
   useEffect(() => {
     const usersArr: string[] = [];
@@ -20,23 +30,50 @@ export const SearchSection = () => {
         Object.keys(user?.follow || {}).includes(userInfo.userId) &&
         Object.keys(userInfo?.followers || {}).includes(user.userId);
 
-      if (isFriend) {
+
+      if (isFriend ) {
         usersArr.push(...Object.keys(user?.follow || {}));
       }
+     
     });
-    setUserRecomendation(usersArr.filter((userId) => userId !== userInfo?.userId));
+
+  
+    const filteredUsersArr = usersArr.filter((userId) => userId !== userInfo?.userId && !Object.keys(userInfo.follow || {}).includes(userId)).slice(0, 5)
+    // console.log(filteredUsersArr)
+
+    if (filteredUsersArr.length < 5) {
+      const remainingSlots = 5 - filteredUsersArr.length;
+      const sortedUsers = users
+        .filter(
+          (user) =>
+            !filteredUsersArr.includes(user.userId) &&
+            user.userId !== userInfo?.userId &&
+            !(userInfo?.followers && userInfo.followers[user.userId] )
+        )
+        .sort(
+          (a, b) =>
+            Object.keys(b.followers || []).length -
+            Object.keys(a.followers || []).length
+        )
+        .slice(0, remainingSlots);
+      setUserRecomendation([...filteredUsersArr, ...sortedUsers.map((user) => user.userId)]);
+    } else {
+      setUserRecomendation(filteredUsersArr);
+    }
+    
   }, []);
 
   return (
     <SearchSectionContainer>
-      <FindInput type="text" placeholder="Поиск пользователей" />
+      <FindInput value={inputValue} onChange={handleInputChange} type="text" placeholder="Поиск пользователей" />
+      {inputValue ? <div>{inputValue}</div> : <></>}
       <RecomendationContainer>
         <h1>Вас может заинтересовать</h1>
         {[...new Set(userRecomendation)].map((userId) => (
           <Recomendation key={userId} userId={userId} />
         ))}
 
-        {/* <Showmore>Show more</Showmore> */}
+     
       </RecomendationContainer>
     </SearchSectionContainer>
   );

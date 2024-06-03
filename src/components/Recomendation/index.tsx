@@ -1,8 +1,10 @@
 import userImage from 'assets/userImage.png';
 import { UserAvatar } from 'components/UserInfoCard/styled';
+import { ref,remove,set } from 'firebase/database';
+import { db } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
-import { FollowButton } from 'pages/Profile/styled';
-import React, { FC } from 'react';
+import { EditProfileButton, FollowButton } from 'pages/Profile/styled';
+import React, { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -11,8 +13,23 @@ import { ProfileContainer, UserRecomedationContainer } from './styled';
 
 export const Recomendation: FC<RecomendationProps> = ({ userId }) => {
   const users = useSelector((state: StateInterface) => state.users);
+  const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
 
   const user = users?.find((user) => user.userId === userId);
+
+  const [isFollowed, setIsFollowed] = useState(false)
+
+  const followToUser = () => {
+    setIsFollowed(true)
+    set(ref(db, `users/${currentUserInfo?.userId}/follow/${userId}`), '');
+    set(ref(db, `users/${userId}/followers/${currentUserInfo?.userId}`), '');
+  };
+
+  const unfollowUser = () => {
+    setIsFollowed(false)
+    remove(ref(db, `users/${currentUserInfo?.userId}/follow/${userId}`));
+    remove(ref(db, `users/${userId}/followers/${currentUserInfo?.userId}`));
+  };
 
   return (
     <ProfileContainer>
@@ -23,7 +40,11 @@ export const Recomendation: FC<RecomendationProps> = ({ userId }) => {
           <p>@{user?.userlink}</p>
         </Link>
       </UserRecomedationContainer>
-      <FollowButton>Подписаться</FollowButton>
+      {
+        isFollowed ?  <EditProfileButton onClick={unfollowUser}>Отписаться</EditProfileButton> :<FollowButton onClick={followToUser}>Подписаться</FollowButton>
+      }
+      
+    
     </ProfileContainer>
   );
 };

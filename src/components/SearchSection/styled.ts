@@ -34,3 +34,14 @@ export const FindInput = styled.input`
 
   ${defaultFont};
 `;
+export const SearchResultContainer = styled.div`
+  height: 550px;
+  width: 380px;
+  padding-left: 20px;
+  font-size: 15px;
+  border-radius: 31px;
+  border: none;
+  background-color: #eff3f4;
+
+  ${defaultFont};
+`;
