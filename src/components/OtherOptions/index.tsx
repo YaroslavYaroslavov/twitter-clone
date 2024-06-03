@@ -34,7 +34,7 @@ export const OtherOptions: FC<OtherOptionsProps> = ({ deletePost }) => {
       <OpenMenuButton onClick={toggleMenuOpen}>•••</OpenMenuButton>
       {isMenuOpen && (
         <OptionsList>
-          <OptionItem onClick={deletePost}>Delete</OptionItem>
+          <OptionItem onClick={deletePost}>Удалить</OptionItem>
           {/* <OptionItem>Edit</OptionItem> */}
         </OptionsList>
       )}

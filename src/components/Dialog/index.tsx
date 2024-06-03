@@ -57,11 +57,11 @@ const Dialog = ({ conversation, onClose }) => {
   
         });
     
-        // const interlocutorRef = ref(db, `users/${conversation.id}`);
-        // onValue(interlocutorRef, (snapshot) => {
-        //   const interlocutorData = snapshot.val();
-        //   setInterlocutorInfo(interlocutorData);
-        // });
+        const interlocutorRef = ref(db, `users/${conversation.id}`);
+        onValue(interlocutorRef, (snapshot) => {
+          const interlocutorData = snapshot.val();
+          setInterlocutorInfo(interlocutorData);
+        });
       }
      
   }, [conversation]);
@@ -72,7 +72,7 @@ const Dialog = ({ conversation, onClose }) => {
 
   const handleSendMessage = () => {
     if (newMessageText.trim() === '') return;
-    // console.log(newMessageText, conversation.id, currentUserInfo.userId, !conversation.name)
+   
     sendMessage(newMessageText, conversation.id, currentUserInfo.userId, !conversation.name);
 
     setNewMessageText('');

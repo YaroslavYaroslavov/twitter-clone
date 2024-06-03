@@ -29,9 +29,9 @@ export const SearchSection = () => {
 
   return (
     <SearchSectionContainer>
-      <FindInput type="text" placeholder="Search Twitter" />
+      <FindInput type="text" placeholder="Поиск пользователей" />
       <RecomendationContainer>
-        <h1>You might like</h1>
+        <h1>Вас может заинтересовать</h1>
         {[...new Set(userRecomendation)].map((userId) => (
           <Recomendation key={userId} userId={userId} />
         ))}

@@ -38,12 +38,14 @@ export const PostInput = styled(TextareaAutosize)`
   border: none;
   color: black;
   min-height: 70px;
+  outline: 0;
+  outline-offset: 0;
 `;
 
 export const TweetBtn = styled.button`
   background-color: ${colors.lightBlue};
 
-  width: 116px;
+  width: 200px;
   height: 50px;
   border-radius: 28px;
   color: white;

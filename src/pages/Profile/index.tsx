@@ -14,6 +14,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   BackgroundImg,
+  ButtonsWrapper,
   Description,
   DescriptionInput,
   EditProfileButton,
@@ -183,19 +184,15 @@ export const Profile = () => {
               <FollowerInfoContainer>
                 <FollowerInfoContainer>
                   <FollowCounter>{currentUserPageFollowList.length}</FollowCounter>
-                  <span>Following</span>
+                  <span>Подписки</span>
                 </FollowerInfoContainer>
                 <FollowerInfoContainer>
                   <FollowCounter>{currentUserPageFollowers.length}</FollowCounter>
-                  <span>Followers</span>
+                  <span>Подписчики</span>
                 </FollowerInfoContainer>
               </FollowerInfoContainer>
             </div>
-            {!isUserOwnerPage && (
-          <>
-            <MessageButton onClick={handleMessageButtonClick}>Message</MessageButton>
-          </>
-        )}
+           
           {conversations.map((conversation) => {
         return (
           <div key={conversation.id} onClick={() => handleConversationClick(conversation)} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
@@ -206,11 +203,18 @@ export const Profile = () => {
       })}
       
             {isUserOwnerPage ? (
-              <EditProfileButton onClick={handleOpenModal}>Edit Profile</EditProfileButton>
+              <EditProfileButton onClick={handleOpenModal}>Редактировать</EditProfileButton>
             ) : isFollowingUser ? (
-              <EditProfileButton onClick={unfollowUser}>Unfollow</EditProfileButton>
+              <ButtonsWrapper>
+              <MessageButton onClick={handleMessageButtonClick}>Сообщение</MessageButton>
+              <EditProfileButton onClick={unfollowUser}>Отписаться</EditProfileButton>
+              </ButtonsWrapper>
             ) : (
-              <FollowButton onClick={followToUser}>Follow</FollowButton>
+              <ButtonsWrapper>
+              <MessageButton onClick={handleMessageButtonClick}>Сообщение</MessageButton>
+              <FollowButton onClick={followToUser}>Подписаться</FollowButton>
+             </ButtonsWrapper>
+              
             )}
           </ProfileInfoContainer>
           {isUserOwnerPage && <CreatePost />}
@@ -250,7 +254,7 @@ export const Profile = () => {
             <DescriptionInput ref={newDescriptionRef} defaultValue={currentUserPage?.description} />
           </EditUserWrapper>
 
-          <FollowButton onClick={handleSaveChanges}>Save</FollowButton>
+          <FollowButton onClick={handleSaveChanges}>Сохранить</FollowButton>
         </EditUserData>
       </Modal>
       <MessageModal

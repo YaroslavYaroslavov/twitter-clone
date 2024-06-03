@@ -13,43 +13,19 @@ const { feed, profile } = paths;
 const navbarLinks = [
   {
     icon: null,
-    text: 'Home',
+    text: 'Лента',
     to: feed,
   },
   {
     icon: null,
-    text: 'Explore',
-    to: feed,
-  },
-  {
-    icon: null,
-    text: 'Notifications',
-    to: feed,
-  },
-  {
-    icon: null,
-    text: 'Messages',
+    text: 'Сообщения',
     to: '/messages',
   },
+
   {
     icon: null,
-    text: 'Bookmarks',
-    to: feed,
-  },
-  {
-    icon: null,
-    text: 'Lists',
-    to: feed,
-  },
-  {
-    icon: null,
-    text: 'Profile',
+    text: 'Профиль',
     to: profile,
-  },
-  {
-    icon: null,
-    text: 'More',
-    to: feed,
   },
 ];
 
@@ -82,11 +58,11 @@ export const Navbar = () => {
         })}
       </NavbarLinkContainer>
 
-      <ButtonTweet>Tweet</ButtonTweet>
+      <ButtonTweet>Создать пост</ButtonTweet>
 
       <UserInfoCard />
 
-      <LogoutButton onClick={handleSignOut}>Log out</LogoutButton>
+      <LogoutButton onClick={handleSignOut}>Выйти</LogoutButton>
     </NavbarStyled>
   );
 };

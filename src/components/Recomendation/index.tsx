@@ -23,7 +23,7 @@ export const Recomendation: FC<RecomendationProps> = ({ userId }) => {
           <p>@{user?.userlink}</p>
         </Link>
       </UserRecomedationContainer>
-      <FollowButton>Follow</FollowButton>
+      <FollowButton>Подписаться</FollowButton>
     </ProfileContainer>
   );
 };

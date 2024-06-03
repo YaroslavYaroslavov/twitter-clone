@@ -93,7 +93,7 @@ export const CreatePost = () => {
     <CreatePostContainer>
       <UserImg src={userInfo?.avatar || noAvatar} />
       <div>
-        <PostInput placeholder="What’s happening" onChange={handleInputChange} />
+        <PostInput placeholder="Что у вас нового?" onChange={handleInputChange} />
 
         {userPostImages.map(
           (image) =>
@@ -120,7 +120,7 @@ export const CreatePost = () => {
             onChange={handleFileChange}
           />
           <UploadImg onClick={handleFileUploadClick} />
-          <TweetBtn onClick={uploadPhotos}>Tweet</TweetBtn>
+          <TweetBtn onClick={uploadPhotos}>Опубликовать</TweetBtn>
         </ButtonsContainer>
       </div>
     </CreatePostContainer>

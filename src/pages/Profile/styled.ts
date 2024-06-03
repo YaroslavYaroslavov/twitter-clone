@@ -167,3 +167,7 @@ export const MessageButton = styled.button`
     background-color: ${colors.lightBlueInactive};
   }
 `;
+export const ButtonsWrapper = styled.div`
+  display: flex;
+  gap: 20px
+`;

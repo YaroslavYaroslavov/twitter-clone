@@ -1,24 +1,30 @@
-import backgroundImageSrc from 'assets/background_signup.webp';
-import twitterLogoSmall from 'assets/twitter-logo-signup.webp';
+import backgroundImageSrc from 'assets/background_signup.jpg';
+// import twitterLogoSmall from 'assets/twitter-logo-signup.webp';
+import logo from 'assets/logo.png'
 import styled from 'styled-components';
 import { flexAlignCenter, flexColumn } from 'theme/globalStyles';
 
 export const SignupBodyContainer = styled.main`
   ${flexAlignCenter}
-`;
+
+
+  `;
 
 export const SignupContainer = styled.section`
   ${flexColumn}
+  
+  /* display: none; */
 
-  width: 100vw;
+  align-items: center;
+  width: 300px;
   height: 100vh;
 `;
 
 export const BackgroundImage = styled.div`
   background-image: url(${backgroundImageSrc});
-  width: 60%;
+  width: 50vw;
   height: 100vh;
-  max-width: 100vw;
+  /* max-width: 100vw; */
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -37,10 +43,11 @@ export const Footer = styled.footer`
 `;
 
 export const TwitterLogoSmall = styled.div`
-  width: 50px;
-  height: 41px;
-
-  background-image: url(${twitterLogoSmall});
+width: 50px;
+height: 41px;
+background-size: contain;
+background-repeat: no-repeat;
+background-image: url(${logo});
 `;
 
 export const AuthorisationSection = styled.div`

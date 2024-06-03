@@ -17,11 +17,11 @@ export const MessageModal = ({ active, setActive, recipientUserId, senderUserId 
   return (
     <Modal active={active} setActive={setActive}>
       <MessageModalData>
-        <h2>Send a message:</h2>
+        <h2>Ваше сообщение:</h2>
         <MessageInput
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)}
-          placeholder="Type a message..."
+          placeholder="Напишите сообщение..."
         />
         <SendButton onClick={handleSendMessage}>Send</SendButton>
       </MessageModalData>
