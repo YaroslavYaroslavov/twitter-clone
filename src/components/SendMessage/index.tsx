@@ -53,7 +53,8 @@ export const sendMessage = (text, recipientUserId, senderUserId, isPrivate) => {
           [`${messageId}`]: { 
             text: text,
             sender: senderUserId,
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            recipient: recipientUserId,
           }
         });
       });
