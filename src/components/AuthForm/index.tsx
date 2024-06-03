@@ -19,7 +19,7 @@ export const AuthForm: FC<AuthFormProps> = ({ headerText, children }) => {
     <AuthWrapper>
       <TwitterLogoSmall onClick={handleLogoClick} />
       <HeaderAuthForm>{headerText}</HeaderAuthForm>
-      <GoBack onClick={handleLogoClick}>Go Back</GoBack>
+      <GoBack onClick={handleLogoClick}>Назад</GoBack>
 
       {children}
     </AuthWrapper>
