@@ -20,7 +20,6 @@ export const SearchSection = () => {
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
-    console.log(e.target.value);
   };
 
   useEffect(() => {
@@ -49,14 +48,12 @@ export const SearchSection = () => {
         return countB - countA;
       });
 
-    console.log( topFollowersUsers);
 
     setUserRecomendation([
       ...filteredUsersArr,
       ...topFollowersUsers.flatMap((user) => Object.keys(user)),
     ].filter(userId => userId !== userInfo?.userId && !Object.keys(userInfo?.follow || {}).includes(userId) ) );
 
-    // setUserRecomendation([...filteredUsersArr, ...sortedUsers.map((user) => user.userId)]);
   }, []);
 
   return (

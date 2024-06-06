@@ -48,7 +48,6 @@ function App() {
 
   const updateLastOnline = () => {
     if (!user) return;
-    console.log('updated');
     set(ref(db, `users/${user.uid}/lastOnline`), Date.now());
   };
 

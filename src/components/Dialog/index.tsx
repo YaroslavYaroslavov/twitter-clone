@@ -78,7 +78,6 @@ const Dialog = ({ conversation, onClose }) => {
   };  
 
 
-  console.log(messages)
   return (
     <DialogContainer>
       {interlocutorInfo?.username ? <h2>Чат с {interlocutorInfo?.username}</h2> :

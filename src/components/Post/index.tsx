@@ -46,6 +46,8 @@ function getTimePassed(milliseconds: number) {
 export const Post: FC<PostProps> = ({ postData }) => {
   const users = useSelector((state: StateInterface) => state.users);
 
+  console.log(users)
+
   const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
 
   if (!currentUserInfo?.userId) return;

@@ -15,7 +15,6 @@ export const Recomendation: FC<RecomendationProps> = ({ userId }) => {
   const users = useSelector((state: StateInterface) => state.users);
   const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
 
-  // console.log(Object.keys(currentUserInfo?.follow).includes(userId));
 
   const user = users?.find((user) => user.userId === userId);
 

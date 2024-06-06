@@ -54,7 +54,7 @@ export const CreatePost = () => {
         return link;
       })
     );
-
+    if(!uploadedLinks.length && !inputValue) return
     handleCreateTweet(uploadedLinks);
   };
 

@@ -10,7 +10,7 @@ import { useMatch } from 'react-router-dom';
 
 import { ButtonTweet, LogoutButton, NavbarLinkContainer, NavbarStyled, StyledLink } from './styled';
 
-const { feed, profile } = paths;
+const { feed, profile, map, messages} = paths;
 
 const navbarLinks = [
   {
@@ -21,13 +21,18 @@ const navbarLinks = [
   {
     icon: null,
     text: 'Сообщения',
-    to: '/messages',
+    to: messages,
   },
 
   {
     icon: null,
     text: 'Профиль',
     to: profile,
+  },
+  {
+    icon: null,
+    text: 'Карта',
+    to: map,
   },
 ];
 
