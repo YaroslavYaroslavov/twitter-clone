@@ -52,8 +52,6 @@ function App() {
     set(ref(db, `users/${user.uid}/lastOnline`), Date.now());
   };
 
-  setInterval(updateLastOnline, 100000);
-
   useEffect(() => {
     onValue(dbUserReference, (snapshot) => {
       if (snapshot.exists()) {
@@ -102,6 +100,7 @@ function App() {
           dispatch(setUserDataAction(userInfo));
         }
       });
+      setInterval(updateLastOnline, 10000);
       navigate(feed);
     }
   }, [user, loading]);

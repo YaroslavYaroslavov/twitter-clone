@@ -182,7 +182,7 @@ export const Profile = () => {
 
     loadConversations();
   }, [currentUserInfo]);
-  console.log(Date.now() - Number(currentUserPage?.lastOnline || 0) > 60000);
+  console.log(Date.now() - Number(currentUserPage?.lastOnline || 0));
   return (
     <>
       <ProfileContainer>
