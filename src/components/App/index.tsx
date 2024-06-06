@@ -3,16 +3,16 @@ import { Navbar } from 'components/Navbar';
 import { SearchSection } from 'components/SearchSection';
 import { paths } from 'constants/paths';
 import { RoutesArr } from 'constants/routes';
-import { onValue, ref } from 'firebase/database';
+import { onValue, ref, set } from 'firebase/database';
 import { db } from 'firebaseConfig/firebase';
 import { setUpRecaptcha } from 'helpers/setUpRecaptcha';
 import { StateInterface } from 'interface';
+import Messages from 'pages/Messages';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useMatch, useNavigate } from 'react-router-dom';
 import GlobalStyles from 'theme/globalStyles';
-import Messages from 'pages/Messages';
 
 import { setMessagesAction, setPostsAction, setUserDataAction, setUsersAction } from '../../index';
 import { configApp } from './config';
@@ -44,7 +44,15 @@ function App() {
 
   const dbUserReference = ref(db, `users`);
   const dbPostsReference = ref(db, `tweets`);
-  const dbMessagesReference = ref(db, `messages`)
+  const dbMessagesReference = ref(db, `messages`);
+
+  const updateLastOnline = () => {
+    if (!user) return;
+    console.log('updated');
+    set(ref(db, `users/${user.uid}/lastOnline`), Date.now());
+  };
+
+  setInterval(updateLastOnline, 100000);
 
   useEffect(() => {
     onValue(dbUserReference, (snapshot) => {
@@ -118,7 +126,7 @@ function App() {
                   ({ pathname, element, logged }) =>
                     logged && <Route key={pathname} path={pathname} element={element} />
                 )}
-                 <Route path="/messages" element={<Messages />} />
+              <Route path="/messages" element={<Messages />} />
             </Routes>
           )}
         </MainContent>

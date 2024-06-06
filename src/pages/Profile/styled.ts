@@ -78,9 +78,26 @@ export const FollowCounter = styled.p`
   font-weight: 700;
 `;
 export const UserAvatar = styled.img`
+  border-radius: 100%;
+  height: 100%;
+  width: 100%;
+`;
+
+export const StatusCircle = styled.div`
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  background-color: lawngreen;
+  border: 5px solid white;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+`;
+
+export const AvatarContainer = styled.div`
+  position: relative;
   width: 150px;
   height: 150px;
-  border-radius: 100%;
 `;
 
 export const FollowButton = styled.button`
