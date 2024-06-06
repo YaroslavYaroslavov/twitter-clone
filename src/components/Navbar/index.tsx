@@ -1,3 +1,4 @@
+import { CreatePost } from 'components/CreatePost';
 import { Modal } from 'components/Modal';
 import { UserInfoCard } from 'components/UserInfoCard';
 import { paths } from 'constants/paths';
@@ -8,7 +9,6 @@ import { useSelector } from 'react-redux';
 import { useMatch } from 'react-router-dom';
 
 import { ButtonTweet, LogoutButton, NavbarLinkContainer, NavbarStyled, StyledLink } from './styled';
-import { CreatePost } from 'components/CreatePost';
 
 const { feed, profile } = paths;
 
@@ -35,7 +35,7 @@ export const Navbar = () => {
   const auth = useSelector((state: StateInterface) => state.auth);
   const userInfo = useSelector((state: StateInterface) => state.userInfo);
 
-  const [modalActive, setModalActive] = useState(false)
+  const [modalActive, setModalActive] = useState(false);
 
   const handleSignOut = () => {
     auth.signOut();
@@ -62,13 +62,19 @@ export const Navbar = () => {
         })}
       </NavbarLinkContainer>
 
-      <ButtonTweet onClick={()=>{setModalActive(true)}}>Создать пост</ButtonTweet>
+      <ButtonTweet
+        onClick={() => {
+          setModalActive(true);
+        }}
+      >
+        Создать пост
+      </ButtonTweet>
 
       <UserInfoCard />
 
       <LogoutButton onClick={handleSignOut}>Выйти</LogoutButton>
       <Modal active={modalActive} setActive={setModalActive}>
-        <CreatePost/>
+        <CreatePost />
       </Modal>
     </NavbarStyled>
   );

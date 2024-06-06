@@ -8,7 +8,7 @@ import { ref, remove, set, update } from 'firebase/database';
 import { getDownloadURL, ref as refStorage, uploadBytes } from 'firebase/storage';
 import { db, storage } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
-import React, { useEffect,useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -33,6 +33,8 @@ import {
   UserAbout,
   UserAvatar,
 } from './styled';
+import { RecomendationContainer } from 'components/SearchSection/styled';
+import { Recomendation } from 'components/Recomendation';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -40,6 +42,9 @@ export const Profile = () => {
   const [modalActive, setModalActive] = useState(false);
   const [userNewAvatar, setUserNewAvatar] = useState<string | ArrayBuffer | null>(null);
   const [userAvatarAsFile, setUserAvatarAsFile] = useState<File | null>(null);
+
+  const [followersModal, setFollowersModal] = useState(false);
+  const [followingModal, setFollowingModal] = useState(false);
 
   const newNameRef = useRef<HTMLInputElement | null>(null);
   const newLinkRef = useRef<HTMLInputElement | null>(null);
@@ -52,9 +57,9 @@ export const Profile = () => {
   const posts = useSelector((state: StateInterface) => state.posts);
   const users = useSelector((state: StateInterface) => state.users);
 
-  const { id  } = useParams();
+  const { id } = useParams();
 
-  const currentUserPage = users?.find((user) => user.userlink === id  );
+  const currentUserPage = users?.find((user) => user.userlink === id);
   const currentUserPageFollowList = Object.keys(currentUserPage?.follow || {});
   const currentUserPageFollowers = Object.keys(currentUserPage?.followers || {});
 
@@ -120,6 +125,14 @@ export const Profile = () => {
     fileInputRef.current?.click();
   };
 
+  const handleOpenModalFollowers = () => {
+    setFollowersModal(true);
+  };
+
+  const handleOpenModalFollowing = () => {
+    setFollowingModal(true);
+  };
+
   const handleOpenModal = () => {
     setModalActive(true);
   };
@@ -135,7 +148,7 @@ export const Profile = () => {
   };
 
   const [messageModalActive, setMessageModalActive] = useState(false);
-  
+
   const handleMessageButtonClick = () => {
     setMessageModalActive(true);
   };
@@ -148,14 +161,17 @@ export const Profile = () => {
       const loadedConversations = [];
 
       for (const conversation of currentUserInfo?.conversations || []) {
-        const conversationRef = ref(db, `message/usersWithMessage/${currentUserInfo?.userId}/users/${conversation.userId}`);
+        const conversationRef = ref(
+          db,
+          `message/usersWithMessage/${currentUserInfo?.userId}/users/${conversation.userId}`
+        );
         onValue(conversationRef, (snapshot) => {
           const data = snapshot.val();
           const lastMessage = Object.values(data?.lastMessage || {})[0];
           loadedConversations.push({
             id: conversation.userId,
             name: conversation.username,
-            lastMessage: lastMessage
+            lastMessage: lastMessage,
           });
           setConversations([...loadedConversations]);
         });
@@ -182,39 +198,44 @@ export const Profile = () => {
               <Description>@{currentUserPage?.userlink}</Description>
               <UserAbout>{currentUserPage?.description}</UserAbout>
               <FollowerInfoContainer>
-                <FollowerInfoContainer>
+                <FollowerInfoContainer onClick={handleOpenModalFollowing}>
                   <FollowCounter>{currentUserPageFollowList.length}</FollowCounter>
                   <span>Подписки</span>
                 </FollowerInfoContainer>
-                <FollowerInfoContainer>
+                <FollowerInfoContainer onClick={handleOpenModalFollowers}>
                   <FollowCounter>{currentUserPageFollowers.length}</FollowCounter>
                   <span>Подписчики</span>
                 </FollowerInfoContainer>
               </FollowerInfoContainer>
             </div>
-           
-          {conversations.map((conversation) => {
-        return (
-          <div key={conversation.id} onClick={() => handleConversationClick(conversation)} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}>
-            <h2>{conversation.name}</h2>
-            <p>{conversation.lastMessage ? conversation.lastMessage.text : 'Нет сообщений'}</p>
-          </div>
-        );
-      })}
-      
+
+            {conversations.map((conversation) => {
+              return (
+                <div
+                  key={conversation.id}
+                  onClick={() => handleConversationClick(conversation)}
+                  style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}
+                >
+                  <h2>{conversation.name}</h2>
+                  <p>
+                    {conversation.lastMessage ? conversation.lastMessage.text : 'Нет сообщений'}
+                  </p>
+                </div>
+              );
+            })}
+
             {isUserOwnerPage ? (
               <EditProfileButton onClick={handleOpenModal}>Редактировать</EditProfileButton>
             ) : isFollowingUser ? (
               <ButtonsWrapper>
-              <MessageButton onClick={handleMessageButtonClick}>Сообщение</MessageButton>
-              <EditProfileButton onClick={unfollowUser}>Отписаться</EditProfileButton>
+                <MessageButton onClick={handleMessageButtonClick}>Сообщение</MessageButton>
+                <EditProfileButton onClick={unfollowUser}>Отписаться</EditProfileButton>
               </ButtonsWrapper>
             ) : (
               <ButtonsWrapper>
-              <MessageButton onClick={handleMessageButtonClick}>Сообщение</MessageButton>
-              <FollowButton onClick={followToUser}>Подписаться</FollowButton>
-             </ButtonsWrapper>
-              
+                <MessageButton onClick={handleMessageButtonClick}>Сообщение</MessageButton>
+                <FollowButton onClick={followToUser}>Подписаться</FollowButton>
+              </ButtonsWrapper>
             )}
           </ProfileInfoContainer>
           {isUserOwnerPage && <CreatePost />}
@@ -256,6 +277,31 @@ export const Profile = () => {
 
           <FollowButton onClick={handleSaveChanges}>Сохранить</FollowButton>
         </EditUserData>
+      </Modal>
+
+      <Modal active={followersModal} setActive={setFollowersModal}>
+        <h1>Подписчики</h1>
+        <RecomendationContainer
+          onClick={() => {
+            setFollowersModal(false);
+          }}
+        >
+          {currentUserPageFollowers.map((userId) => (
+            <Recomendation key={userId} userId={userId} />
+          ))}
+        </RecomendationContainer>
+      </Modal>
+      <Modal active={followingModal} setActive={setFollowingModal}>
+        <h1>Подписки</h1>
+        <RecomendationContainer
+          onClick={() => {
+            setFollowingModal(false);
+          }}
+        >
+          {currentUserPageFollowList.map((userId) => (
+            <Recomendation key={userId} userId={userId} />
+          ))}
+        </RecomendationContainer>
       </Modal>
       <MessageModal
         active={messageModalActive}

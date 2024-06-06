@@ -70,6 +70,7 @@ export const FollowerInfoContainer = styled.section`
   gap: 10px;
   margin-top: 20px;
   color: grey;
+  cursor: pointer;
 `;
 
 export const FollowCounter = styled.p`
@@ -170,5 +171,5 @@ export const MessageButton = styled.button`
 `;
 export const ButtonsWrapper = styled.div`
   display: flex;
-  gap: 20px
+  gap: 20px;
 `;

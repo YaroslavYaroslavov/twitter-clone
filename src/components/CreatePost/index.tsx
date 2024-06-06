@@ -37,7 +37,6 @@ export const CreatePost = () => {
       time: Date.now(),
     });
   };
-
   const uploadPhotos = async () => {
     setInputValue('');
     setUserPostImagesAsFile([]);
@@ -63,9 +62,12 @@ export const CreatePost = () => {
     fileInputRef.current?.click();
   };
 
-  // const handleRemoveImage = (stringToRemove: string) => {
-  //   setUserPostImages((prevArray) => prevArray.filter((item) => item !== stringToRemove));
-  // };
+  const handleRemoveImage = (stringToRemove: string) => {
+    setUserPostImages((prevArray) => prevArray.filter((item) => item !== stringToRemove));
+    setUserPostImagesAsFile((prevArray) =>
+      prevArray.filter((file, index) => userPostImages[index] !== stringToRemove)
+    );
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files && event.target.files[0];
@@ -93,18 +95,22 @@ export const CreatePost = () => {
     <CreatePostContainer>
       <UserImg src={userInfo?.avatar || noAvatar} />
       <div>
-        <PostInput placeholder="Что у вас нового?" onChange={handleInputChange} />
+        <PostInput
+          value={inputValue}
+          placeholder="Что у вас нового?"
+          onChange={handleInputChange}
+        />
 
         {userPostImages.map(
           (image) =>
             typeof image === 'string' && (
               <img
                 src={image}
-                // data-image={image}
-                // onClick={(e: React.MouseEvent<HTMLImageElement>) => {
-                //   const target = e.currentTarget as HTMLImageElement;
-                //   handleRemoveImage(target.getAttribute('data-image') || '');
-                // }}
+                data-image={image}
+                onClick={(e: React.MouseEvent<HTMLImageElement>) => {
+                  const target = e.currentTarget as HTMLImageElement;
+                  handleRemoveImage(target.getAttribute('data-image') || '');
+                }}
                 key={image?.toString()}
                 style={{ width: '100px', height: '100px' }}
               />
@@ -118,6 +124,7 @@ export const CreatePost = () => {
             ref={fileInputRef}
             style={{ display: 'none' }}
             onChange={handleFileChange}
+            // value={inputValue}
           />
           <UploadImg onClick={handleFileUploadClick} />
           <TweetBtn onClick={uploadPhotos}>Опубликовать</TweetBtn>
