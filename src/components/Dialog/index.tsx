@@ -31,7 +31,6 @@ const Dialog = ({ conversation, onClose }) => {
   const users = useSelector((state: StateInterface) => state.users);
   const [interlocutorInfo, setInterlocutorInfo] = useState(null);
   const messagesEndRef = useRef(null);
-  const [participantsCount, setParticipantsCount] = useState(0);
   const [showParticipantsModal, setShowParticipantsModal] = useState(false);
   const [participants, setParticipants] = useState([]);
 
@@ -40,10 +39,6 @@ const Dialog = ({ conversation, onClose }) => {
     console.log('123');
   };
 
-  const closeParticipantsModal = () => {
-    setShowParticipantsModal(false);
-    console.log('232');
-  };
 
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
@@ -89,19 +84,15 @@ const Dialog = ({ conversation, onClose }) => {
       if (participantsData) {
         const participantsIds = Object.keys(participantsData);
         const participantsList = participantsIds.map((userId) => participantsData[userId]);
-        const participantsWithInfo = participantsList.map((participant) => {
-          const user = users.find((user) => user.userId === participant.userId);
-          return {
-            ...participant,
-            username: user ? user.username : 'Unknown',
-            avatar: user ? user.avatar : '/path/to/default/avatar.jpg',
-          };
-        });
+      
 
-        
-        setParticipants(participantsWithInfo);
-        setParticipantsCount(participantsWithInfo.length);
+        const participantsWithInfo = participantsList.map((participant) => users.find((user) => user.userId === participant));
+        // console.log(participantsWithInfo)
+    
+
+        setParticipants(participantsWithInfo)
       }
+      
     });
   }, [conversation, currentUserInfo, users]);
 
@@ -114,7 +105,6 @@ const Dialog = ({ conversation, onClose }) => {
     sendMessage(newMessageText, conversation.id, currentUserInfo.userId, !conversation.name);
     setNewMessageText('');
   };
-
   return (
     <DialogContainer>
       {interlocutorInfo?.username ? (
@@ -123,7 +113,7 @@ const Dialog = ({ conversation, onClose }) => {
         <h2>
           {conversation?.name}
           <ParticipantsCount onClick={handleParticipantsClick}>
-            {participantsCount} участника
+            {Object.keys(participants).length} участника
           </ParticipantsCount>
         </h2>
       ) : (
@@ -178,10 +168,11 @@ const Dialog = ({ conversation, onClose }) => {
             {participants.map((participant) => (
               <li key={participant.userId}>
                 <AvatarLink>
+                <Username>{participant.username}</Username>
                   <Link to={`/profile/${participant.userlink}`}>
                     <Avatar src={participant.avatar} alt="Avatar" />
                   </Link>
-                  <Username>{participant.username}</Username>
+                 
                 </AvatarLink>
               </li>
             ))}
