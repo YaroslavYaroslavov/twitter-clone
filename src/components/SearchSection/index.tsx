@@ -18,7 +18,6 @@ export const SearchSection = () => {
 
   const [userRecomendation, setUserRecomendation] = useState<string[]>([]);
 
-  console.log(users);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);

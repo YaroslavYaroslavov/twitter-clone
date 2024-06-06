@@ -164,3 +164,16 @@ export const CloseButton = styled.button`
     background-color: ${colors.lightGrayHover};
   }
 `;
+export const ParticipantsCount = styled.span`
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: 0 0;
+  color: var(--gray_400);
+  font: 16px / 18px var(--palette-vk-font, -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Geneva, arial, Tahoma, verdana, sans-serif);
+
+  &:hover {
+    text-decoration: underline; 
+  }
+`;

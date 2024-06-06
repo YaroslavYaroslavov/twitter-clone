@@ -60,5 +60,4 @@ export const sendMessage = (text, recipientUserId, senderUserId, isPrivate) => {
       });
     });
    }
- 
 };

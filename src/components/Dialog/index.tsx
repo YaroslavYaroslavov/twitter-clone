@@ -5,6 +5,7 @@ import { StateInterface } from 'interface';
 import React, { useCallback,useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import ParticipantsModal from 'components/ParticipantsModal';
 
 import {
   Avatar, 
@@ -19,16 +20,32 @@ import {
   MessagesContainer, 
   SendButton, 
   TheirMessageInfo,
-  Username} from './styled';
+  Username,
+  ParticipantsCount} from './styled';
  
 const Dialog = ({ conversation, onClose }) => {
+
   const [messages, setMessages] = useState([]);
   const [newMessageText, setNewMessageText] = useState('');
   const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
   const users = useSelector((state: StateInterface) => state.users)
   const [interlocutorInfo, setInterlocutorInfo] = useState(null);
   const messagesEndRef = useRef(null); 
+  const [participantsCount, setParticipantsCount] = useState(0);
+  const [showParticipantsModal, setShowParticipantsModal] = useState(false);
+  const [participants, setParticipants] = useState([]);
 
+
+  const handleParticipantsClick = () => {
+    setShowParticipantsModal(true);
+    console.log('123');
+  };
+
+  
+  const closeParticipantsModal = () => {
+    setShowParticipantsModal(false);
+    console.log('232');
+  };
   // Функция скроллинга
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
@@ -62,7 +79,14 @@ const Dialog = ({ conversation, onClose }) => {
           setInterlocutorInfo(interlocutorData);
         });
       }
-     
+      const participantsRef = ref(db, `message/usersWithMessage/${currentUserInfo.userId}/chats/${conversation.id}/users`);
+      onValue(participantsRef, (snapshot) => {
+        const participantsData = snapshot.val();
+        if (participantsData) {
+          setParticipantsCount(Object.keys(participantsData).length);
+        }
+      });
+
   }, [conversation]);
 
   useEffect(() => {
@@ -77,15 +101,30 @@ const Dialog = ({ conversation, onClose }) => {
     setNewMessageText('');
   };  
 
-
-  console.log(messages)
+  console.log();
+  
   return (
     <DialogContainer>
-      {interlocutorInfo?.username ? <h2>Чат с {interlocutorInfo?.username}</h2> :
-       conversation?.name ?  <h2>Беседа {conversation?.name}</h2> : 
-       <h2>Загрузка...</h2>
-      }
-
+    {interlocutorInfo?.username ? (
+      <h2>Чат с {interlocutorInfo?.username}</h2>
+    ) : conversation?.name ? (
+      <h2>
+        {conversation?.name}
+        <ParticipantsCount onClick={handleParticipantsClick}>
+          {participantsCount} участника
+        </ParticipantsCount>
+      </h2>
+    ) : (
+      <h2>Загрузка...</h2>
+    )}
+{showParticipantsModal && (
+  <ParticipantsModal 
+    active={showParticipantsModal} 
+    setActive={closeParticipantsModal} 
+    participants={participants} 
+    onClose={closeParticipantsModal} 
+  />
+)}
       <MessagesContainer>
       {messages.length ? messages.map((message) =>  {
         const messageSender = users.find(user => user.userId === message.sender)
