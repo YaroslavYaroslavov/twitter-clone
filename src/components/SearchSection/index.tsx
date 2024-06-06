@@ -18,8 +18,6 @@ export const SearchSection = () => {
 
   const [userRecomendation, setUserRecomendation] = useState<string[]>([]);
 
-  console.log(users);
-
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
     console.log(e.target.value);
@@ -39,26 +37,23 @@ export const SearchSection = () => {
       }
     });
 
-    const filteredUsersArr = usersArr.filter(
-      (userId) =>
-        userId !== userInfo?.userId && !Object.keys(userInfo.follow || {}).includes(userId)
-    );
-    // .slice(0, 5);
-    // console.log(filteredUsersArr)
+    const filteredUsersArr = usersArr.filter((userId) => userId !== userInfo?.userId);
 
-    if (filteredUsersArr.length < 5) {
-      const sortedUsers = users.filter(
-        (user) =>
-          !filteredUsersArr.includes(user.userId) &&
-          user.userId !== userInfo?.userId &&
-          !(userInfo?.followers && userInfo.followers[user.userId])
-      );
+    const topFollowersUsers = users
+      .map((user) => ({
+        [user.userId]: Object.keys(user?.followers || {}).length,
+      }))
+      .sort((a, b) => {
+        const countA = Object.values(a)[0];
+        const countB = Object.values(b)[0];
+        return countB - countA;
+      });
 
-      setUserRecomendation([...filteredUsersArr, ...sortedUsers.map((user) => user.userId)]);
-    }
-    // } else {
-    // }
-    setUserRecomendation(filteredUsersArr);
+    console.log(topFollowersUsers);
+
+    // setUserRecomendation([...filteredUsersArr, ...topFollowersUsers]);
+
+    // setUserRecomendation([...filteredUsersArr, ...sortedUsers.map((user) => user.userId)]);
   }, []);
 
   return (
