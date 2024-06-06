@@ -1,14 +1,15 @@
 import { Feed } from 'pages/Feed';
 import { Login } from 'pages/Login';
+import { Map } from 'pages/Map';
+import Messages from 'pages/Messages';
 import { Profile } from 'pages/Profile';
 import { Signup } from 'pages/Signup';
 import { SignupForm } from 'pages/SignupForm';
 import React from 'react';
 
 import { paths } from './paths';
-import Messages from 'pages/Messages';
 
-const { homepage, signup, login, feed, profile, messages } = paths;
+const { homepage, signup, login, feed, profile, messages, map } = paths;
 
 export const RoutesArr = [
   {
@@ -40,5 +41,10 @@ export const RoutesArr = [
     pathname: messages,
     element: <Messages />,
     logged: true,
+  },
+  {
+    pathname: map,
+    element: <Map/>,
+    logged: true
   }
 ];

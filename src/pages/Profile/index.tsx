@@ -4,7 +4,9 @@ import { CreatePost } from 'components/CreatePost';
 import { MessageModal } from 'components/MessageModal';
 import { Modal } from 'components/Modal';
 import { Post } from 'components/Post';
-import { ref, remove, set, update } from 'firebase/database';
+import { Recomendation } from 'components/Recomendation';
+import { RecomendationContainer } from 'components/SearchSection/styled';
+import { onValue, ref, remove, set, update } from 'firebase/database';
 import { getDownloadURL, ref as refStorage, uploadBytes } from 'firebase/storage';
 import { db, storage } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
@@ -13,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import {
+  AvatarContainer,
   BackgroundImg,
   ButtonsWrapper,
   Description,
@@ -30,11 +33,10 @@ import {
   ProfileContainer,
   ProfileInfoContainer,
   ProfileMain,
+  StatusCircle,
   UserAbout,
   UserAvatar,
 } from './styled';
-import { RecomendationContainer } from 'components/SearchSection/styled';
-import { Recomendation } from 'components/Recomendation';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -193,7 +195,10 @@ export const Profile = () => {
           <BackgroundImg src={background} alt="" />
           <ProfileInfoContainer>
             <div>
-              <UserAvatar src={currentUserPage?.avatar || userImgBig} alt="avatar" />
+              <AvatarContainer>
+                <UserAvatar src={currentUserPage?.avatar || userImgBig} alt="avatar" />
+                {Date.now() - Number(currentUserPage?.lastOnline || 0) < 60000 && <StatusCircle />}
+              </AvatarContainer>
               <h2>{currentUserPage?.username}</h2>
               <Description>@{currentUserPage?.userlink}</Description>
               <UserAbout>{currentUserPage?.description}</UserAbout>

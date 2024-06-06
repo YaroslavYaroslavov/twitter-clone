@@ -5,6 +5,7 @@ export interface UserInfo {
   username: string;
   userlink: string;
   userId: string;
+  lastOnline: Date;
   avatar?: string;
   day?: number;
   month?: number;
