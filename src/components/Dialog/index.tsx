@@ -1,26 +1,25 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import { ref, onValue } from 'firebase/database';
+import { sendMessage } from 'components/SendMessage';
+import { onValue,ref } from 'firebase/database';
 import { db } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
-import { sendMessage } from 'components/SendMessage';
+import React, { useCallback,useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
-  DialogContainer,
-  MessagesContainer, 
-  MessageItem, 
-  AvatarLink, 
   Avatar, 
-  Username, 
-  MessageContent, 
-  InputContainer, 
-  MessageInput, 
+  AvatarLink, 
   ButtonContainer, 
-  SendButton, 
   CloseButton, 
-  TheirMessageInfo
-} from './styled';
+  DialogContainer,
+  InputContainer, 
+  MessageContent, 
+  MessageInput, 
+  MessageItem, 
+  MessagesContainer, 
+  SendButton, 
+  TheirMessageInfo,
+  Username} from './styled';
  
 const Dialog = ({ conversation, onClose }) => {
   const [messages, setMessages] = useState([]);
@@ -79,7 +78,7 @@ const Dialog = ({ conversation, onClose }) => {
   };  
 
 
-  
+  console.log(messages)
   return (
     <DialogContainer>
       {interlocutorInfo?.username ? <h2>Чат с {interlocutorInfo?.username}</h2> :
@@ -88,11 +87,11 @@ const Dialog = ({ conversation, onClose }) => {
       }
 
       <MessagesContainer>
-      {messages.length ? messages.map((message) => {
+      {messages.length ? messages.map((message) =>  {
         const messageSender = users.find(user => user.userId === message.sender)
       
     return  (
-      <MessageItem key={messageSender.userId} className={messageSender.userId === currentUserInfo.userId ? 'mine' : 'theirs'}>
+      <MessageItem key={messageSender.id} className={messageSender.userId === currentUserInfo.userId ? 'mine' : 'theirs'}>
       {messageSender.userId !== currentUserInfo.userId && (
         <TheirMessageInfo>
           <AvatarLink>
