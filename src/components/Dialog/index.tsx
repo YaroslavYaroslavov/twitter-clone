@@ -18,6 +18,7 @@ import {
   MessageInput,
   MessageItem,
   MessagesContainer,
+  ParticipantsCount,
   SendButton,
   TheirMessageInfo,
   Username,
