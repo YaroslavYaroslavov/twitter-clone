@@ -44,7 +44,7 @@ const Dialog = ({ conversation, onClose }) => {
     setShowParticipantsModal(false);
     console.log('232');
   };
-  // Функция скроллинга
+
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
@@ -62,7 +62,6 @@ const Dialog = ({ conversation, onClose }) => {
         : ref(db, `message/usersWithMessage/${currentUserInfo.userId}/users/${conversation.id}`);
       onValue(messagesRef, (snapshot) => {
         const messagesData = snapshot.val();
-
         if (messagesData) {
           const messagesList = Object.keys(messagesData).map((messageId) => ({
             id: messageId,
@@ -80,6 +79,7 @@ const Dialog = ({ conversation, onClose }) => {
         setInterlocutorInfo(interlocutorData);
       });
     }
+
     const participantsRef = ref(
       db,
       `message/usersWithMessage/${currentUserInfo.userId}/chats/${conversation.id}/users`
@@ -87,24 +87,33 @@ const Dialog = ({ conversation, onClose }) => {
     onValue(participantsRef, (snapshot) => {
       const participantsData = snapshot.val();
       if (participantsData) {
-        setParticipantsCount(Object.keys(participantsData).length);
+        const participantsIds = Object.keys(participantsData);
+        const participantsList = participantsIds.map((userId) => participantsData[userId]);
+        const participantsWithInfo = participantsList.map((participant) => {
+          const user = users.find((user) => user.userId === participant.userId);
+          return {
+            ...participant,
+            username: user ? user.username : 'Unknown',
+            avatar: user ? user.avatar : '/path/to/default/avatar.jpg',
+          };
+        });
+
+        
+        setParticipants(participantsWithInfo);
+        setParticipantsCount(participantsWithInfo.length);
       }
     });
-  }, [conversation]);
+  }, [conversation, currentUserInfo, users]);
 
   useEffect(() => {
-    scrollToBottom(); // Прокрутка до последнего сообщения
+    scrollToBottom();
   }, [messages, scrollToBottom]);
 
   const handleSendMessage = () => {
     if (newMessageText.trim() === '') return;
-
     sendMessage(newMessageText, conversation.id, currentUserInfo.userId, !conversation.name);
-
     setNewMessageText('');
   };
-
-  console.log();
 
   return (
     <DialogContainer>
@@ -125,7 +134,6 @@ const Dialog = ({ conversation, onClose }) => {
         {messages.length
           ? messages.map((message) => {
               const messageSender = users.find((user) => user.userId === message.sender);
-
               return (
                 <MessageItem
                   key={messageSender.id}
@@ -164,7 +172,21 @@ const Dialog = ({ conversation, onClose }) => {
         </ButtonContainer>
       </InputContainer>
       <Modal active={showParticipantsModal} setActive={setShowParticipantsModal}>
-        <h1>КИРПИЧИ</h1>
+        <div>
+          <h3>Участники беседы:</h3>
+          <ul>
+            {participants.map((participant) => (
+              <li key={participant.userId}>
+                <AvatarLink>
+                  <Link to={`/profile/${participant.userlink}`}>
+                    <Avatar src={participant.avatar} alt="Avatar" />
+                  </Link>
+                  <Username>{participant.username}</Username>
+                </AvatarLink>
+              </li>
+            ))}
+          </ul>
+        </div>
       </Modal>
     </DialogContainer>
   );
