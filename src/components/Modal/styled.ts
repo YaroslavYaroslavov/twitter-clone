@@ -19,7 +19,7 @@ export const ModalContainer = styled.div<ModalContainerProps>`
 `;
 
 export const ModalContent = styled.div<ModalContainerProps>`
-  max-width: 400px;
+  max-width: 1920px;
   padding: 20px;
   border-radius: 12px;
   transition: 0.5s;

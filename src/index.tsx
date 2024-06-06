@@ -11,6 +11,7 @@ import App from './components/App';
 export const SET_USER_DATA = 'SET_USER_DATA';
 export const SET_USERS = 'SET_USERS';
 export const SET_POSTS = 'SET_POSTS';
+export const SET_MESSAGES = 'SET_MESSAGES';
 
 export const setUserDataAction = (userData: UserInfo) => ({
   type: SET_USER_DATA,
@@ -25,6 +26,11 @@ export const setPostsAction = (posts: { userId: PostInterface }) => ({
 export const setUsersAction = (users: UserInfo[]) => ({
   type: SET_USERS,
   payload: users,
+});
+
+export const setMessagesAction = (massages) => ({
+  type: SET_MESSAGES,
+  payload: massages,
 });
 
 const defaultState: StateInterface = {
@@ -42,6 +48,8 @@ const reducer = (state = defaultState, action: Action) => {
       return { ...state, users: action.payload };
     case SET_POSTS:
       return { ...state, posts: action.payload };
+    case SET_MESSAGES:
+      return { ...state, massages: action.payload};
     default:
       return state;
   }

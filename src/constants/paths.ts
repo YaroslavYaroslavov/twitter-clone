@@ -4,5 +4,6 @@ export const paths = {
   login: '/login',
   feed: '/feed',
   profile: '/profile/:id',
+  messages: '/messages/:id',
   notfound: '/notfound',
 };

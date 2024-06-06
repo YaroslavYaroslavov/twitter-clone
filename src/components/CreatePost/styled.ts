@@ -7,7 +7,7 @@ import { centerByFlex, defaultFont } from 'theme/globalStyles';
 export const CreatePostContainer = styled.section`
   display: flex;
   padding: 15px;
-  margin-top: 40px;
+  /* margin-top: 40px; */
   border-top: 3px solid ${colors.border};
   border-bottom: 3px solid ${colors.border};
 `;
@@ -38,12 +38,14 @@ export const PostInput = styled(TextareaAutosize)`
   border: none;
   color: black;
   min-height: 70px;
+  outline: 0;
+  outline-offset: 0;
 `;
 
 export const TweetBtn = styled.button`
   background-color: ${colors.lightBlue};
 
-  width: 116px;
+  width: 200px;
   height: 50px;
   border-radius: 28px;
   color: white;

@@ -215,7 +215,7 @@ export const SignupForm: FC = () => {
         {errors.date && <ErrorContainer>{errors.date?.message}</ErrorContainer>}
 
         <LoginButton disabled={!isValid} type="submit">
-          Next
+            Далее
         </LoginButton>
       </StyledSignupForm>
     </AuthForm>

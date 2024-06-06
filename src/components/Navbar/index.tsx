@@ -1,8 +1,10 @@
+import { CreatePost } from 'components/CreatePost';
+import { Modal } from 'components/Modal';
 import { UserInfoCard } from 'components/UserInfoCard';
 import { paths } from 'constants/paths';
 import { StateInterface } from 'interface';
 import { TwitterLogoSmall } from 'pages/Signup/styled';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useMatch } from 'react-router-dom';
 
@@ -13,49 +15,27 @@ const { feed, profile } = paths;
 const navbarLinks = [
   {
     icon: null,
-    text: 'Home',
+    text: 'Лента',
     to: feed,
   },
   {
     icon: null,
-    text: 'Explore',
-    to: feed,
+    text: 'Сообщения',
+    to: '/messages',
   },
+
   {
     icon: null,
-    text: 'Notifications',
-    to: feed,
-  },
-  {
-    icon: null,
-    text: 'Messages',
-    to: feed,
-  },
-  {
-    icon: null,
-    text: 'Bookmarks',
-    to: feed,
-  },
-  {
-    icon: null,
-    text: 'Lists',
-    to: feed,
-  },
-  {
-    icon: null,
-    text: 'Profile',
+    text: 'Профиль',
     to: profile,
-  },
-  {
-    icon: null,
-    text: 'More',
-    to: feed,
   },
 ];
 
 export const Navbar = () => {
   const auth = useSelector((state: StateInterface) => state.auth);
   const userInfo = useSelector((state: StateInterface) => state.userInfo);
+
+  const [modalActive, setModalActive] = useState(false);
 
   const handleSignOut = () => {
     auth.signOut();
@@ -82,11 +62,20 @@ export const Navbar = () => {
         })}
       </NavbarLinkContainer>
 
-      <ButtonTweet>Tweet</ButtonTweet>
+      <ButtonTweet
+        onClick={() => {
+          setModalActive(true);
+        }}
+      >
+        Создать пост
+      </ButtonTweet>
 
       <UserInfoCard />
 
-      <LogoutButton onClick={handleSignOut}>Log out</LogoutButton>
+      <LogoutButton onClick={handleSignOut}>Выйти</LogoutButton>
+      <Modal active={modalActive} setActive={setModalActive}>
+        <CreatePost />
+      </Modal>
     </NavbarStyled>
   );
 };

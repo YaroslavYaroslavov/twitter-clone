@@ -29,17 +29,17 @@ function getTimePassed(milliseconds: number) {
   const years = Math.floor(months / 12);
 
   if (years > 0) {
-    return years + ' year';
+    return years + ' лет';
   } else if (months > 0) {
-    return months + ' month';
+    return months + ' мес';
   } else if (days > 0) {
-    return days + ' day';
+    return days + ' дн';
   } else if (hours > 0) {
-    return hours + ' hr';
+    return hours + ' час';
   } else if (minutes > 0) {
-    return minutes + ' min';
+    return minutes + ' мин';
   } else {
-    return seconds + ' sec';
+    return seconds + ' с';
   }
 }
 

@@ -55,11 +55,11 @@ export const Signup: FC = () => {
         </AuthorisationSection>
       </SignupBodyContainer>
 
-      <Footer>
+      {/* <Footer>
         {footerLinks.map((link) => (
           <a key={link}>{link}</a>
         ))}
-      </Footer>
+      </Footer> */}
     </SignupContainer>
   );
 };

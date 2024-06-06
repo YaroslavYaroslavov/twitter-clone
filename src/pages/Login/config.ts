@@ -1,6 +1,6 @@
 export const configLogin = {
-  loginPlaceholder: 'Email or Phone number',
-  passwordPlaceholder: 'Password',
-  loginButtonText: 'Log in',
-  LinkToRegisterText: 'Sign up to Twitter',
+  loginPlaceholder: 'Почта или телефон',
+  passwordPlaceholder: 'Пароль',
+  loginButtonText: 'Войти',
+  LinkToRegisterText: 'Войти в TrawelCrew',
 };

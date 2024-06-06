@@ -38,6 +38,7 @@ export const ProfileInfoContainer = styled.section`
   justify-content: space-between;
   margin-left: 20px;
   margin-right: 20px;
+  margin-bottom: 40px;
 `;
 
 export const EditProfileButton = styled.button`
@@ -69,6 +70,7 @@ export const FollowerInfoContainer = styled.section`
   gap: 10px;
   margin-top: 20px;
   color: grey;
+  cursor: pointer;
 `;
 
 export const FollowCounter = styled.p`
@@ -150,4 +152,24 @@ export const DescriptionInput = styled(TextareaAutosize)`
   border: 1px solid ${colors.border};
 
   border-radius: 12px;
+`;
+export const MessageButton = styled.button`
+  ${defaultFont}
+
+  border-radius: 50px;
+  border: none;
+  background-color: ${colors.lightBlue};
+  color: white;
+  width: 120px;
+  font-weight: 700;
+  height: 44px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${colors.lightBlueInactive};
+  }
+`;
+export const ButtonsWrapper = styled.div`
+  display: flex;
+  gap: 20px;
 `;
