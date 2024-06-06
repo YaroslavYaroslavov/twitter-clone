@@ -49,12 +49,12 @@ export const SearchSection = () => {
         return countB - countA;
       });
 
-    console.log();
+    console.log( topFollowersUsers);
 
     setUserRecomendation([
       ...filteredUsersArr,
-      ...topFollowersUsers.map((user) => Object.keys(user)),
-    ]);
+      ...topFollowersUsers.flatMap((user) => Object.keys(user)),
+    ].filter(userId => userId !== userInfo?.userId && !Object.keys(userInfo?.follow || {}).includes(userId) ) );
 
     // setUserRecomendation([...filteredUsersArr, ...sortedUsers.map((user) => user.userId)]);
   }, []);
