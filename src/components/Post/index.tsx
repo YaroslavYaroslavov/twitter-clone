@@ -43,10 +43,8 @@ function getTimePassed(milliseconds: number) {
   }
 }
 
-export const Post: FC<PostProps> = ({ postData }) => {
+export const Post: FC<PostProps> = ({ postId, postData }) => {
   const users = useSelector((state: StateInterface) => state.users);
-
-  console.log(users)
 
   const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
 
@@ -59,15 +57,17 @@ export const Post: FC<PostProps> = ({ postData }) => {
   const isLiked = likesUserArray.includes(currentUserInfo.userId);
 
   const toggleLikePost = () => {
-    const likesRef = `tweets/${postData.authorId}/${postData.authorId}_${postData.time}/likes/${currentUserInfo?.userId}`;
+    const likesRef = `tweets/${postData.authorId}/${postId}/likes/${currentUserInfo?.userId}`;
 
     isLiked ? remove(ref(db, likesRef)) : set(ref(db, likesRef), '');
   };
 
   const handleDeletePost = () => {
-    const postRef = `tweets/${postData.authorId}/${postData.authorId}_${postData.time}`;
+    const postRef = `tweets/${postData.authorId}/${postId}`;
     remove(ref(db, postRef));
   };
+
+  // console.log(postId);
 
   return (
     <PostContainer>
@@ -84,9 +84,9 @@ export const Post: FC<PostProps> = ({ postData }) => {
             <OtherOptions deletePost={handleDeletePost} />
           )}
         </PostHeader>
-        <PostTextContent>{postData.content.text}</PostTextContent>
+        <PostTextContent>{postData.content?.text}</PostTextContent>
 
-        {postData.content.images &&
+        {postData.content?.images &&
           postData.content.images.map((image) => (
             <img style={{ width: '200px', height: '200px' }} src={image} key={image} />
           ))}

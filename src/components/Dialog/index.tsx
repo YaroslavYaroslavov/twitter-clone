@@ -36,9 +36,7 @@ const Dialog = ({ conversation, onClose }) => {
 
   const handleParticipantsClick = () => {
     setShowParticipantsModal(true);
-    console.log('123');
   };
-
 
   const scrollToBottom = useCallback(() => {
     if (messagesEndRef.current) {
@@ -84,15 +82,13 @@ const Dialog = ({ conversation, onClose }) => {
       if (participantsData) {
         const participantsIds = Object.keys(participantsData);
         const participantsList = participantsIds.map((userId) => participantsData[userId]);
-      
 
-        const participantsWithInfo = participantsList.map((participant) => users.find((user) => user.userId === participant));
-        // console.log(participantsWithInfo)
-    
+        const participantsWithInfo = participantsList.map((participant) =>
+          users.find((user) => user.userId === participant)
+        );
 
-        setParticipants(participantsWithInfo)
+        setParticipants(participantsWithInfo);
       }
-      
     });
   }, [conversation, currentUserInfo, users]);
 
@@ -168,11 +164,10 @@ const Dialog = ({ conversation, onClose }) => {
             {participants.map((participant) => (
               <li key={participant.userId}>
                 <AvatarLink>
-                <Username>{participant.username}</Username>
+                  <Username>{participant.username}</Username>
                   <Link to={`/profile/${participant.userlink}`}>
                     <Avatar src={participant.avatar} alt="Avatar" />
                   </Link>
-                 
                 </AvatarLink>
               </li>
             ))}

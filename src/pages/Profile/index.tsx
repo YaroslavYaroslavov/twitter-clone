@@ -248,7 +248,7 @@ export const Profile = () => {
             Object.values(authorPosts)
               .reverse()
               .map((post) => {
-                return <Post key={post.postId} postData={post} />;
+                return <Post key={post.postId} postId={post.postId} postData={post} />;
               })}
         </ProfileMain>
       </ProfileContainer>
