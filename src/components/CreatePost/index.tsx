@@ -1,5 +1,5 @@
 import noAvatar from 'assets/userImage.png';
-import { ref, set } from 'firebase/database';
+import { push, ref, set } from 'firebase/database';
 import { getDownloadURL, ref as refStorage, uploadBytes } from 'firebase/storage';
 import { db, storage } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
@@ -26,13 +26,15 @@ export const CreatePost = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const newPostKey = push(ref(db, `tweets/${userInfo?.userId}`)).key;
+
   const handleCreateTweet = (uploadedLinks: string[]) => {
-    set(ref(db, `tweets/${userInfo?.userId}/${userInfo?.userId}_${Date.now()}`), {
+    set(ref(db, `tweets/${userInfo?.userId}/${newPostKey}`), {
       content: {
         text: inputValue,
         images: uploadedLinks,
       },
-      postId: `${userInfo?.userId}_${Date.now()}`,
+      postId: newPostKey,
       authorId: userInfo?.userId,
       time: Date.now(),
     });
@@ -54,7 +56,7 @@ export const CreatePost = () => {
         return link;
       })
     );
-    if(!uploadedLinks.length && !inputValue) return
+    if (!uploadedLinks.length && !inputValue) return;
     handleCreateTweet(uploadedLinks);
   };
 
