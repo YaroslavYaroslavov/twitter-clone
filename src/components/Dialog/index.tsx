@@ -33,7 +33,7 @@ const Dialog = ({ conversation, onClose }) => {
   const messagesEndRef = useRef(null);
   const [showParticipantsModal, setShowParticipantsModal] = useState(false);
   const [participants, setParticipants] = useState([]);
-  const [usersConversation, setUsersConversation] = useState(0)
+  // const [usersConversation, setUsersConversation] = useState(0)
 
 
   const isConversation = !!conversation.name
@@ -70,6 +70,7 @@ const Dialog = ({ conversation, onClose }) => {
         if(isConversation) {
           onValue(messagesRef, (snapshot) => {
             const conversationData = snapshot.val();
+            console.log(conversationData)
             if (conversationData) {
               console.log(conversationData.users.length)
               const messagesList = Object.keys(conversationData.messages).map((messageId) => ({
