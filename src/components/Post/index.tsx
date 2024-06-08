@@ -44,6 +44,7 @@ function getTimePassed(milliseconds: number) {
 }
 
 export const Post: FC<PostProps> = ({ postId, postData }) => {
+  console.log(postId, postData);
   const users = useSelector((state: StateInterface) => state.users);
 
   const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
@@ -66,8 +67,6 @@ export const Post: FC<PostProps> = ({ postId, postData }) => {
     const postRef = `tweets/${postData.authorId}/${postId}`;
     remove(ref(db, postRef));
   };
-
-  // console.log(postId);
 
   return (
     <PostContainer>

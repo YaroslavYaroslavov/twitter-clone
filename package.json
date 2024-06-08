@@ -11,6 +11,7 @@
     "prettier": "prettier . --fix"
   },
   "dependencies": {
+    "@pbe/react-yandex-maps": "^1.2.5",
     "firebase": "^10.7.0",
     "firebase-react-hooks": "^0.8.0",
     "react": "^18.2.0",

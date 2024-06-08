@@ -1,6 +1,7 @@
 // styled.js
 import styled from 'styled-components';
 import { colors } from 'theme/colorsPallete';
+import { centerByFlex, flexColumn } from 'theme/globalStyles';
 
 export const DialogContainer = styled.div`
   padding: 10px;
@@ -62,7 +63,6 @@ export const MessageItem = styled.div`
   }
 `;
 
-
 export const AvatarLink = styled.div`
   text-decoration: none;
   color: inherit;
@@ -110,8 +110,6 @@ export const MessageContent = styled.div`
     align-self: flex-start; /* Устанавливаем выравнивание по левому краю для сообщений собеседника */
   }
 `;
-
-
 
 export const InputContainer = styled.div`
   display: flex;
@@ -171,9 +169,21 @@ export const ParticipantsCount = styled.span`
   border: 0;
   background: 0 0;
   color: var(--gray_400);
-  font: 16px / 18px var(--palette-vk-font, -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Geneva, arial, Tahoma, verdana, sans-serif);
+  font: 16px / 18px
+    var(
+      --palette-vk-font,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Roboto',
+      'Helvetica Neue',
+      Geneva,
+      arial,
+      Tahoma,
+      verdana,
+      sans-serif
+    );
 
   &:hover {
-    text-decoration: underline; 
+    text-decoration: underline;
   }
 `;
