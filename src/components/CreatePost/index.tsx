@@ -18,6 +18,10 @@ import {
 export const CreatePost = () => {
   const [inputValue, setInputValue] = useState('');
   const [userPostImagesAsFile, setUserPostImagesAsFile] = useState<File[]>([]);
+  const [lat, setLat] = useState(49.14);
+  const [long, setLong] = useState(28.28);
+  const [isUsedGeo, setIsUsingGeo] = useState(false);
+
   const [userPostImages, setUserPostImages] = useState<(string | ArrayBuffer | null | undefined)[]>(
     []
   );
@@ -28,11 +32,20 @@ export const CreatePost = () => {
 
   const newPostKey = push(ref(db, `tweets/${userInfo?.userId}`)).key;
 
+  const pickGeo = () => {
+    setIsUsingGeo((prev) => !prev);
+    navigator.geolocation.getCurrentPosition(function (location) {
+      setLat(location.coords.latitude);
+      setLong(location.coords.longitude);
+    });
+  };
+
   const handleCreateTweet = (uploadedLinks: string[]) => {
     set(ref(db, `tweets/${userInfo?.userId}/${newPostKey}`), {
       content: {
         text: inputValue,
         images: uploadedLinks,
+        coord: { isUsedGeo, long, lat },
       },
       postId: newPostKey,
       authorId: userInfo?.userId,
@@ -58,6 +71,13 @@ export const CreatePost = () => {
     );
     if (!uploadedLinks.length && !inputValue) return;
     handleCreateTweet(uploadedLinks);
+  };
+
+  const handleLongChange = (e) => {
+    setLong(e.target.value);
+  };
+  const handleLatChange = (e) => {
+    setLat(e.target.value);
   };
 
   const handleFileUploadClick = () => {
@@ -129,6 +149,15 @@ export const CreatePost = () => {
             // value={inputValue}
           />
           <UploadImg onClick={handleFileUploadClick} />
+          <button onClick={pickGeo}>Geo</button>
+          {isUsedGeo && (
+            <>
+              Долгота
+              <input onChange={handleLongChange} value={long} type="number" />
+              Широта
+              <input onChange={handleLatChange} value={lat} type="number" />
+            </>
+          )}
           <TweetBtn onClick={uploadPhotos}>Опубликовать</TweetBtn>
         </ButtonsContainer>
       </div>

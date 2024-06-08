@@ -36,6 +36,7 @@ const Dialog = ({ conversation, onClose }) => {
 
   const handleParticipantsClick = () => {
     setShowParticipantsModal(true);
+    console.log('123');
   };
 
   const scrollToBottom = useCallback(() => {
@@ -86,6 +87,7 @@ const Dialog = ({ conversation, onClose }) => {
         const participantsWithInfo = participantsList.map((participant) =>
           users.find((user) => user.userId === participant)
         );
+        // console.log(participantsWithInfo)
 
         setParticipants(participantsWithInfo);
       }
