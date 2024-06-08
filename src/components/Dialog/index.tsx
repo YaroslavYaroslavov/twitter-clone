@@ -56,16 +56,16 @@ const Dialog = ({ conversation, onClose }) => {
   useEffect(() => {
     if (currentUserInfo && conversation) {
       setMessages([]);
-      const messagesRef = conversation.name
+      const conversationRef = conversation.name
         ? ref(
             db,
-            `message/usersWithMessage/${currentUserInfo.userId}/chats/${conversation.id}/messages`
+            `message/usersWithMessage/${currentUserInfo.userId}/chats/${conversation.id}`
           )
         : ref(db, `message/usersWithMessage/${currentUserInfo.userId}/users/${conversation.id}`);
-      onValue(messagesRef, (snapshot) => {
-        const messagesData = snapshot.val();
-        if (messagesData) {
-          const messagesList = Object.keys(messagesData).map((messageId) => ({
+      onValue(conversationRef, (snapshot) => {
+        const conversationData = snapshot.val();
+        if (conversationData) {
+          const messagesList = Object.keys(conversationData.messages).map((messageId) => ({
             id: messageId,
             text: messagesData[messageId].text,
             sender: messagesData[messageId].sender,
