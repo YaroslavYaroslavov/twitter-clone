@@ -51,9 +51,9 @@ const Dialog = ({ conversation, onClose }) => {
 
   const handleKickUser = (chatID, userID) => {
 
-    conversation.users.map(userId => {
+    Object.keys(conversation.users).map(userId => {
      
-      remove(ref(db, `message/usersWithMessage/${userId}/chats/${chatID}/users/${conversation.users.indexOf(userID)}`));
+      remove(ref(db, `message/usersWithMessage/${userId}/chats/${chatID}/users/${userID}`));
     });
   }
 
@@ -122,11 +122,11 @@ const Dialog = ({ conversation, onClose }) => {
     );
     onValue(participantsRef, (snapshot) => {
       const participantsData = snapshot.val();
+      console.log(participantsData)
       if (participantsData) {
         const participantsIds = Object.keys(participantsData);
-        const participantsList = participantsIds.map((userId) => participantsData[userId]);
 
-        const participantsWithInfo = participantsList.map((participant) =>
+        const participantsWithInfo = participantsIds.map((participant) =>
           users.find((user) => user.userId === participant)
         );
         setParticipants(participantsWithInfo);
@@ -205,7 +205,7 @@ const Dialog = ({ conversation, onClose }) => {
 
      
       <Modal active={showParticipantsModal} setActive={setShowParticipantsModal}>
-        {/* <div>
+        <div>
           <h3>Участники беседы:</h3>
           <ul>
             {participants.map((participant) => {
@@ -226,7 +226,7 @@ const Dialog = ({ conversation, onClose }) => {
             }
             )}
           </ul>
-        </div> */}
+        </div>
       </Modal>
     </DialogContainer>
   );
