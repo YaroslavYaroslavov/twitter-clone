@@ -1,6 +1,6 @@
 import { Modal } from 'components/Modal';
 import { sendMessage } from 'components/SendMessage';
-import { onValue, ref } from 'firebase/database';
+import { DatabaseReference, onValue, ref, remove } from 'firebase/database';
 import { db } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -36,7 +36,7 @@ const Dialog = ({ conversation, onClose }) => {
 
   const handleParticipantsClick = () => {
     setShowParticipantsModal(true);
-    console.log('123');
+  
   };
 
   const scrollToBottom = useCallback(() => {
@@ -44,6 +44,14 @@ const Dialog = ({ conversation, onClose }) => {
       messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
     }
   }, []);
+
+  const handleKickUser = (chatID, userID) => {
+    // console.log(conversation.users.indexOf(userID))
+    conversation.users.map(userId => {
+      console.log(userId)
+      remove(ref(db, `message/usersWithMessage/${userId}/chats/${chatID}/users/${conversation.users.indexOf(userID)}`));
+    });
+  }
 
   useEffect(() => {
     if (currentUserInfo && conversation) {
@@ -148,31 +156,40 @@ const Dialog = ({ conversation, onClose }) => {
           : 'пока пусто'}
         <div ref={messagesEndRef} />
       </MessagesContainer>
-      <InputContainer>
-        <MessageInput
-          value={newMessageText}
-          onChange={(e) => setNewMessageText(e.target.value)}
-          placeholder="Напишите сообщение..."
-        />
-        <ButtonContainer>
-          <SendButton onClick={handleSendMessage}>Отправить</SendButton>
-          <CloseButton onClick={onClose}>Закрыть</CloseButton>
-        </ButtonContainer>
-      </InputContainer>
+      {conversation.users.includes(currentUserInfo?.userId) &&
+           <InputContainer>
+           <MessageInput
+             value={newMessageText}
+             onChange={(e) => setNewMessageText(e.target.value)}
+             placeholder="Напишите сообщение..."
+           />
+           <ButtonContainer>
+             <SendButton onClick={handleSendMessage}>Отправить</SendButton>
+             <CloseButton onClick={onClose}>Закрыть</CloseButton>
+           </ButtonContainer>
+         </InputContainer>
+        } 
+     
       <Modal active={showParticipantsModal} setActive={setShowParticipantsModal}>
         <div>
           <h3>Участники беседы:</h3>
           <ul>
-            {participants.map((participant) => (
-              <li key={participant.userId}>
+            {participants.map((participant) => {
+              return (
+               <li key={participant.userId}>
                 <AvatarLink>
                   <Username>{participant.username}</Username>
                   <Link to={`/profile/${participant.userlink}`}>
                     <Avatar src={participant.avatar} alt="Avatar" />
                   </Link>
+                  <button onClick={()=>{
+                    handleKickUser(conversation.id, participant.userId)
+                  }}>Delete</button>
                 </AvatarLink>
-              </li>
-            ))}
+               
+              </li>)
+            }
+            )}
           </ul>
         </div>
       </Modal>
