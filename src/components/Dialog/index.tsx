@@ -34,6 +34,10 @@ const Dialog = ({ conversation, onClose }) => {
   const [showParticipantsModal, setShowParticipantsModal] = useState(false);
   const [participants, setParticipants] = useState([]);
 
+  const isConversation = !!conversation.name
+
+  console.log(!!conversation.name)
+
   const handleParticipantsClick = () => {
     setShowParticipantsModal(true);
   
@@ -56,28 +60,46 @@ const Dialog = ({ conversation, onClose }) => {
   useEffect(() => {
     if (currentUserInfo && conversation) {
       setMessages([]);
-      const conversationRef = conversation.name
+      const messagesRef = isConversation
         ? ref(
             db,
             `message/usersWithMessage/${currentUserInfo.userId}/chats/${conversation.id}`
           )
         : ref(db, `message/usersWithMessage/${currentUserInfo.userId}/users/${conversation.id}`);
-      onValue(conversationRef, (snapshot) => {
-        const conversationData = snapshot.val();
-        if (conversationData) {
-          const messagesList = Object.keys(conversationData.messages).map((messageId) => ({
-            id: messageId,
-            text: messagesData[messageId].text,
-            sender: messagesData[messageId].sender,
-            timestamp: messagesData[messageId].timestamp,
-          }));
-          setMessages(messagesList);
+
+        if(isConversation) {
+          onValue(messagesRef, (snapshot) => {
+            const conversationData = snapshot.val();
+            if (conversationData) {
+              const messagesList = Object.keys(conversationData.messages).map((messageId) => ({
+                id: messageId,
+                text: conversationData.messages[messageId].text,
+                sender: conversationData.messages[messageId].sender,
+                timestamp: conversationData.messages[messageId].timestamp,
+              }));
+              setMessages(messagesList);
+            }
+          })
+        } else{
+          onValue(messagesRef, (snapshot) => {
+            const messagesData = snapshot.val();
+            if (messagesData) {
+              const messagesList = Object.keys(messagesData).map((messageId) => ({
+                id: messageId,
+                text: messagesData[messageId].text,
+                sender: messagesData[messageId].sender,
+                timestamp: messagesData[messageId].timestamp,
+              }));
+              setMessages(messagesList);
+            }
+          })
         }
-      });
+    
 
       const interlocutorRef = ref(db, `users/${conversation.id}`);
       onValue(interlocutorRef, (snapshot) => {
         const interlocutorData = snapshot.val();
+        console.log(123, interlocutorData)
         setInterlocutorInfo(interlocutorData);
       });
     }
@@ -95,8 +117,6 @@ const Dialog = ({ conversation, onClose }) => {
         const participantsWithInfo = participantsList.map((participant) =>
           users.find((user) => user.userId === participant)
         );
-        // console.log(participantsWithInfo)
-
         setParticipants(participantsWithInfo);
       }
     });
@@ -156,19 +176,21 @@ const Dialog = ({ conversation, onClose }) => {
           : 'пока пусто'}
         <div ref={messagesEndRef} />
       </MessagesContainer>
-      {conversation.users.includes(currentUserInfo?.userId) &&
-           <InputContainer>
-           <MessageInput
-             value={newMessageText}
-             onChange={(e) => setNewMessageText(e.target.value)}
-             placeholder="Напишите сообщение..."
-           />
-           <ButtonContainer>
-             <SendButton onClick={handleSendMessage}>Отправить</SendButton>
-             <CloseButton onClick={onClose}>Закрыть</CloseButton>
-           </ButtonContainer>
-         </InputContainer>
-        } 
+      {(!isConversation ||  conversation.users.includes(currentUserInfo?.userId)) &&
+   <InputContainer>
+     <MessageInput
+       value={newMessageText}
+       onChange={(e) => setNewMessageText(e.target.value)}
+       placeholder="Напишите сообщение..."
+     />
+     <ButtonContainer>
+       <SendButton onClick={handleSendMessage}>Отправить</SendButton>
+       <CloseButton onClick={onClose}>Закрыть</CloseButton>
+     </ButtonContainer>
+   </InputContainer>
+}
+
+
      
       <Modal active={showParticipantsModal} setActive={setShowParticipantsModal}>
         <div>
