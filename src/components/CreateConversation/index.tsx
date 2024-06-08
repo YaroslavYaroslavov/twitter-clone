@@ -31,14 +31,17 @@ const CreateConversation = ({ onConversationCreated, availableUsers, handleDialo
 
       const newConversationData = {
         name: conversationName,
-        users: [...selectedUsers.map(user => user.id), currentUserInfo.userId ],
+        users: [...selectedUsers.map(user => user.id), currentUserInfo.userId].reduce((acc, userId) => {
+          acc[userId] = '';
+          return acc;
+      }, {}),
       };
 
       const newConversationKey = push(ref(db, 'message/usersWithMessage/')).key;
   
-  
-      newConversationData.users.forEach((userID) => {
-      
+      console.log(newConversationData)
+      Object.keys(newConversationData.users).forEach((userID) => {
+        
           const conversationRef = ref(db, `message/usersWithMessage/${userID}/chats/${newConversationKey}`)
         
           set(conversationRef, newConversationData)

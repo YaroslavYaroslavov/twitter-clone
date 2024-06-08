@@ -33,10 +33,10 @@ const Dialog = ({ conversation, onClose }) => {
   const messagesEndRef = useRef(null);
   const [showParticipantsModal, setShowParticipantsModal] = useState(false);
   const [participants, setParticipants] = useState([]);
+  const [usersConversation, setUsersConversation] = useState(0)
+
 
   const isConversation = !!conversation.name
-
-  console.log(!!conversation.name)
 
   const handleParticipantsClick = () => {
     setShowParticipantsModal(true);
@@ -50,9 +50,9 @@ const Dialog = ({ conversation, onClose }) => {
   }, []);
 
   const handleKickUser = (chatID, userID) => {
-    // console.log(conversation.users.indexOf(userID))
+
     conversation.users.map(userId => {
-      console.log(userId)
+     
       remove(ref(db, `message/usersWithMessage/${userId}/chats/${chatID}/users/${conversation.users.indexOf(userID)}`));
     });
   }
@@ -71,6 +71,7 @@ const Dialog = ({ conversation, onClose }) => {
           onValue(messagesRef, (snapshot) => {
             const conversationData = snapshot.val();
             if (conversationData) {
+              console.log(conversationData.users.length)
               const messagesList = Object.keys(conversationData.messages).map((messageId) => ({
                 id: messageId,
                 text: conversationData.messages[messageId].text,
@@ -78,6 +79,17 @@ const Dialog = ({ conversation, onClose }) => {
                 timestamp: conversationData.messages[messageId].timestamp,
               }));
               setMessages(messagesList);
+            }
+
+          })
+          onValue( ref(
+            db,
+            `message/usersWithMessage/${currentUserInfo.userId}/chats/${conversation.id}/users`
+          ), (snapshot) => {
+            const conversationData = snapshot.val();
+            if (conversationData) {
+              console.log(  )
+  
             }
           })
         } else{
@@ -99,7 +111,6 @@ const Dialog = ({ conversation, onClose }) => {
       const interlocutorRef = ref(db, `users/${conversation.id}`);
       onValue(interlocutorRef, (snapshot) => {
         const interlocutorData = snapshot.val();
-        console.log(123, interlocutorData)
         setInterlocutorInfo(interlocutorData);
       });
     }
@@ -176,7 +187,7 @@ const Dialog = ({ conversation, onClose }) => {
           : 'пока пусто'}
         <div ref={messagesEndRef} />
       </MessagesContainer>
-      {(!isConversation ||  conversation.users.includes(currentUserInfo?.userId)) &&
+      {(!isConversation ||  Object.keys(conversation.users).includes(currentUserInfo?.userId)) &&
    <InputContainer>
      <MessageInput
        value={newMessageText}
@@ -193,10 +204,11 @@ const Dialog = ({ conversation, onClose }) => {
 
      
       <Modal active={showParticipantsModal} setActive={setShowParticipantsModal}>
-        <div>
+        {/* <div>
           <h3>Участники беседы:</h3>
           <ul>
             {participants.map((participant) => {
+              console.log(participant)
               return (
                <li key={participant.userId}>
                 <AvatarLink>
@@ -213,7 +225,7 @@ const Dialog = ({ conversation, onClose }) => {
             }
             )}
           </ul>
-        </div>
+        </div> */}
       </Modal>
     </DialogContainer>
   );
