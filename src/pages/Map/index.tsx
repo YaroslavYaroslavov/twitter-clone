@@ -124,7 +124,7 @@ export const Map = () => {
 </YMap>
 
           <Modal active={isModalActive} setActive={setModalActive}>
-              {currentKey && postsByCoord[currentKey].map((post) => {
+              {currentKey && postsByCoord[currentKey] && postsByCoord[currentKey].map((post) => {
                 if (post.content.coord.isUsedGeo) {return <Post key={post.postId} postId={post.postId} postData={post} />}
                 
               })}
