@@ -22,7 +22,7 @@ export const Map = () => {
 
   
   navigator.geolocation.getCurrentPosition(function (location) {
-    console.log()
+   
     setLat(location.coords.latitude);
     setLong(location.coords.longitude);
   });

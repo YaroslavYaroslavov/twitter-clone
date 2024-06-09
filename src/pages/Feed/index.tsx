@@ -22,7 +22,7 @@ export const Feed = () => {
 
   return (
     <>
-      {Object.values(followedPosts)
+      {Object.values(followedPosts || {})
         .sort((a, b) => b.time - a.time)
         .map((post) => {
           return <Post key={post.postId} postData={post} />;

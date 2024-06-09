@@ -45,9 +45,9 @@ function getTimePassed(milliseconds: number) {
   }
 }
 
-export const Post: FC<PostProps> = ({ postId, postData }) => {
+export const Post: FC<PostProps> = ({postData }) => {
   const users = useSelector((state: StateInterface) => state.users);
-
+  
   const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
 
   if (!currentUserInfo?.userId) return;
@@ -59,13 +59,13 @@ export const Post: FC<PostProps> = ({ postId, postData }) => {
   const isLiked = likesUserArray.includes(currentUserInfo.userId);
 
   const toggleLikePost = () => {
-    const likesRef = `tweets/${postData.authorId}/${postId}/likes/${currentUserInfo?.userId}`;
+    const likesRef = `tweets/${postData.authorId}/${postData.postId}/likes/${currentUserInfo?.userId}`;
 
     isLiked ? remove(ref(db, likesRef)) : set(ref(db, likesRef), '');
   };
 
   const handleDeletePost = () => {
-    const postRef = `tweets/${postData.authorId}/${postId}`;
+    const postRef = `tweets/${postData.authorId}/${postData.postId}`;
     remove(ref(db, postRef));
   };
 
@@ -91,7 +91,7 @@ export const Post: FC<PostProps> = ({ postId, postData }) => {
             <img style={{ width: '200px', height: '200px' }} src={image} key={image} />
           ))}
           <ActivityContainer>
-             <LikeSection isLiked={isLiked}>
+          <LikeSection isLiked={isLiked}>
           <LikeButton isLiked={isLiked} onClick={toggleLikePost} />
           <span>{likesUserArray.length}</span>
         </LikeSection>
