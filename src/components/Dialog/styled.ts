@@ -1,10 +1,9 @@
-// styled.js
+
 import cross from 'assets/cross.svg'
 import goBack from 'assets/goback.svg'
 import sendMessage from 'assets/sendMessage.svg'
 import styled from 'styled-components';
 import { colors } from 'theme/colorsPallete';
-import { centerByFlex, flexColumn } from 'theme/globalStyles';
 
 export const DialogContainer = styled.div`
   padding: 10px;
@@ -102,13 +101,13 @@ export const MessageContent = styled.div`
   padding: 10px;
   border-radius: 10px;
   margin-top: 5px;
-  color: ${colors.black};
+  color: black;
   width: 100%;
 
   &.mine {
     align-self: flex-start;
-    background-color: ${colors.blue};
-    color: ${colors.white};
+    background-color: blue;
+    color: white;
     border-radius: 10px 10px 0px 10px;
   }
 
