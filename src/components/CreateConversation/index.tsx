@@ -1,4 +1,3 @@
-import { CloseButton } from 'components/Dialog/styled';
 import { ButtonTweet } from 'components/Navbar/styled';
 import { push, ref, set } from 'firebase/database';
 import { db } from 'firebaseConfig/firebase';
@@ -6,10 +5,10 @@ import { StateInterface } from 'interface';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-const CreateConversation = ({ onConversationCreated, availableUsers, handleDialogClose }) => {
+const CreateConversation = ({ onConversationCreated, availableUsers }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [conversationName, setConversationName] = useState('');
-  const currentUserInfo = useSelector(state => state.userInfo);
+  const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
   const users = useSelector((state: StateInterface) => state.users);
 
   const handleUserSelect = (user) => {
@@ -28,20 +27,36 @@ const CreateConversation = ({ onConversationCreated, availableUsers, handleDialo
     
 
     if (selectedUsers.length > 0 && conversationName.trim() !== '') {
+   
+      const startMessage = {
+        sender: 'system',
+        timestamp: Date.now(),
+        code: 800,
+        info: 'create',
+        iniciator: currentUserInfo?.userId
+      }
+
 
       const newConversationData = {
         name: conversationName,
-        users: [...selectedUsers.map(user => user.id), currentUserInfo.userId ],
+        users: [...selectedUsers.map(user => user.id), currentUserInfo.userId].reduce((acc, userId) => {
+          acc[userId] = '';
+          return acc;
+      }, {}),
+        
       };
 
       const newConversationKey = push(ref(db, 'message/usersWithMessage/')).key;
-  
-  
-      newConversationData.users.forEach((userID) => {
       
+      Object.keys(newConversationData.users).forEach((userID) => {
+
+           
+
+
+          const newMessageKey = push(ref(db, `message/usersWithMessage/${userID}/${newConversationKey}`)).key;
           const conversationRef = ref(db, `message/usersWithMessage/${userID}/chats/${newConversationKey}`)
         
-          set(conversationRef, newConversationData)
+          set(conversationRef, {...newConversationData, messages: {[newMessageKey]: startMessage}})
           onConversationCreated()
       } )
 

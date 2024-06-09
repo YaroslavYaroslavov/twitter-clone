@@ -173,9 +173,9 @@ const Messages = () => {
             <>
             
               {chats.map((chat) => (
-                <>
+                <React.Fragment key={chat.id} >
                 <div
-                    key={chat.id}
+                 
                     onClick={() => handleConversationClick(chat)}
                     style={{
                       borderBottom: '1px solid #ccc',
@@ -200,7 +200,7 @@ const Messages = () => {
                       </>
                     )}
                   </div>
-              </>
+              </React.Fragment>
               ))}
             </>
           </>
@@ -209,7 +209,7 @@ const Messages = () => {
 
       <div style={{ padding: '10px' }}>
         {selectedConversation && (
-          <Dialog conversation={selectedConversation} onClose={handleDialogClose} />
+          <Dialog conversation={selectedConversation} onClose={handleDialogClose} availableUsers={availableUsers} />
         )}
         {!selectedConversation && (
           <div

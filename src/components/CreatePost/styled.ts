@@ -1,3 +1,4 @@
+import GeoSVG from 'assets/geoIco.svg'
 import uploadImg from 'assets/uploadImg.png';
 import TextareaAutosize from 'react-textarea-autosize';
 import styled from 'styled-components';
@@ -67,3 +68,23 @@ export const UploadImg = styled.button`
   width: 25px;
   height: 25px;
 `;
+
+export const GeoPick = styled.button`
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  background: url(${GeoSVG})  center no-repeat;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+ 
+ 
+  cursor: pointer;
+  `
+
+export const ActivityContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+`

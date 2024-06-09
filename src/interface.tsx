@@ -15,6 +15,7 @@ export interface UserInfo {
   follow?: object;
   followers?: object;
   description?: string;
+  
 }
 export interface StateInterface {
   auth: Auth;
@@ -35,10 +36,22 @@ export interface Action_SET_USERS {
   payload: UserInfo[];
 }
 
+export interface Action_SET_MESSAGES {
+  type: 'SET_MESSAGES';
+  payload: UserInfo[];
+}
+
+interface Coord {
+  isUsedGeo: boolean,
+  long: string | number,
+  lat: string | number
+}
+
 export interface PostInterface {
   content: {
     text: string;
     images: string[];
+    coord: Coord
   };
   postId: string;
   authorId: string;
@@ -49,4 +62,4 @@ export interface Action_SET_POSTS {
   type: 'SET_POSTS';
   payload: PostInterface[];
 }
-export type Action = Action_SET_USER_DATA | Action_SET_USERS | Action_SET_POSTS;
+export type Action = Action_SET_USER_DATA | Action_SET_USERS | Action_SET_POSTS | Action_SET_MESSAGES;

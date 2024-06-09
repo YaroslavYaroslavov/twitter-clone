@@ -46,7 +46,8 @@ export const sendMessage = (text, recipientUserId, senderUserId, isPrivate) => {
     onValue(recipientMessagesRef, (snapshot) => {
         
       const data = snapshot.val()
-      data.forEach(userID => {
+      console.log(1111, data)
+      Object.keys(data).forEach(userID => {
         if(senderUserId === userID) return
         const userRef = ref(db, `message/usersWithMessage/${userID}/chats/${recipientUserId}/messages`)
         update(userRef, {

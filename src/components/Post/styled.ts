@@ -64,3 +64,9 @@ export const LikeSection = styled.section<LikeButtonProps>`
   color: ${({ isLiked }) => (isLiked ? '#f0215f' : colors.lightGray)};
   font-weight: 600;
 `;
+
+export const GeoContainer = styled.div`
+display: flex;
+align-items: center;
+color: ${colors.lightGray}
+`

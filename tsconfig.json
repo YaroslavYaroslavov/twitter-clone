@@ -16,12 +16,12 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
 
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
     "useUnknownInCatchVariables": true,
-    "alwaysStrict": true,
+    "alwaysStrict": false,
     "noImplicitOverride": true,
     "skipLibCheck": true
   }

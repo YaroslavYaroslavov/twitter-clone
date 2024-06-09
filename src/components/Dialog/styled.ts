@@ -1,7 +1,9 @@
-// styled.js
+
+import cross from 'assets/cross.svg'
+import goBack from 'assets/goback.svg'
+import sendMessage from 'assets/sendMessage.svg'
 import styled from 'styled-components';
 import { colors } from 'theme/colorsPallete';
-import { centerByFlex, flexColumn } from 'theme/globalStyles';
 
 export const DialogContainer = styled.div`
   padding: 10px;
@@ -56,9 +58,11 @@ export const MessageItem = styled.div`
 
   &.mine {
     align-self: flex-end;
+    border-radius: 0
   }
 
   &.theirs {
+    border-radius: 0;
     align-self: flex-start;
   }
 `;
@@ -97,57 +101,74 @@ export const MessageContent = styled.div`
   padding: 10px;
   border-radius: 10px;
   margin-top: 5px;
-  color: ${colors.black};
+  color: black;
   width: 100%;
 
   &.mine {
     align-self: flex-start;
-    background-color: ${colors.blue};
-    color: ${colors.white};
+    background-color: blue;
+    color: white;
+    border-radius: 10px 10px 0px 10px;
   }
 
   &.theirs {
+    border-radius: 0px 10px 10px 10px;
     align-self: flex-start; /* Устанавливаем выравнивание по левому краю для сообщений собеседника */
   }
 `;
 
 export const InputContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
+  justify-content: space-between;
   align-items: stretch;
   padding: 10px;
+  border: 1px solid ${colors.lightGray};
+  border-radius: 5px;
+  /* gap: 20px; */
+  
 `;
 
-export const MessageInput = styled.textarea`
+export const MessageInput = styled.input`
+border: none;
   margin-bottom: 10px;
   padding: 10px;
   flex-grow: 0;
   resize: none;
   border-radius: 7px;
   height: 60px;
+  width: 100%;
+  &:focus {
+    outline-width: 0;
+}
 `;
 
 export const ButtonContainer = styled.div`
   display: flex;
+ justify-content: center;
+ align-items: center;
+ gap: 20px;
 
-  button {
-    margin-right: 10px;
-  }
 `;
-
 export const SendButton = styled.button`
-  background-color: ${colors.lightBlue};
-  color: white;
-  padding: 10px 20px;
+  width: 20px;
+  height: 20px;
+  background: none;
   border: none;
-  border-radius: 5px;
+  background: url(${sendMessage})  center no-repeat;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: invert(78%) sepia(9%) saturate(10%) hue-rotate(326deg) brightness(83%) contrast(82%);
   cursor: pointer;
-  transition: background-color 0.3s ease;
-
+  transition: filter 0.3s; // добавим плавное изменение фильтра при наведении
+  
   &:hover {
-    background-color: ${colors.lightBlueInactive};
+    filter: none;
+    transform: scale(1.2);
   }
 `;
+
 
 export const CloseButton = styled.button`
   background-color: ${colors.lightGray};
@@ -187,3 +208,90 @@ export const ParticipantsCount = styled.span`
     text-decoration: underline;
   }
 `;
+
+export const NoMessages = styled.div `
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+
+`
+export const DialogHeader = styled.div `
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  & > * {
+    width: 100px
+  }
+`
+
+export const MembersModal = styled.div`
+
+`
+
+export const MembersList = styled.ul`
+ list-style-type: none;
+`
+export const CrossBtn = styled.button`
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  background: url(${cross})  center no-repeat;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  
+  cursor: pointer;
+  transition: filter 0.3s; // добавим плавное изменение фильтра при наведении
+  
+  &:hover {
+    filter: invert(100%) 
+  } `
+
+export const GoBack = styled.button`
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  background: url(${goBack})  center no-repeat;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: -5px; 
+  left: 0px;
+  margin-right: 20px;
+  cursor: pointer;
+  transition: filter 0.3s; // добавим плавное изменение фильтра при наведении
+  
+  &:hover {
+    filter: invert(100%) 
+  } `
+
+
+
+export const HeaderModal = styled.div`
+  width: 300px;
+display: flex;
+align-items: center;
+justify-content: center;
+ 
+`
+export const EditUsersContainer = styled.div`
+position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+`
+export const SystemMessage = styled.div`
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+`
