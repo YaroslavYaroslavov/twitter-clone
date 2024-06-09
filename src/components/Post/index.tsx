@@ -1,3 +1,4 @@
+import { ActivityContainer, GeoPick } from 'components/CreatePost/styled';
 import { OtherOptions } from 'components/OtherOptions';
 import { StyledUserLink, StyledUserName } from 'components/UserInfoCard/styled';
 import { ref, remove, set } from 'firebase/database';
@@ -18,7 +19,6 @@ import {
   PostTextContent,
   UserAvatar,
 } from './styled';
-import { ActivityContainer, GeoPick } from 'components/CreatePost/styled';
 
 function getTimePassed(milliseconds: number) {
   const timePassed = Date.now() - milliseconds;
@@ -46,7 +46,6 @@ function getTimePassed(milliseconds: number) {
 }
 
 export const Post: FC<PostProps> = ({ postId, postData }) => {
-  console.log(postId, postData);
   const users = useSelector((state: StateInterface) => state.users);
 
   const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);

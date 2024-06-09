@@ -15,6 +15,7 @@ export interface UserInfo {
   follow?: object;
   followers?: object;
   description?: string;
+  
 }
 export interface StateInterface {
   auth: Auth;

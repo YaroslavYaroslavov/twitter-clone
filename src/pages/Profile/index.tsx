@@ -6,11 +6,11 @@ import { Modal } from 'components/Modal';
 import { Post } from 'components/Post';
 import { Recomendation } from 'components/Recomendation';
 import { RecomendationContainer } from 'components/SearchSection/styled';
-import { onValue, ref, remove, set, update } from 'firebase/database';
+import { ref, remove, set, update } from 'firebase/database';
 import { getDownloadURL, ref as refStorage, uploadBytes } from 'firebase/storage';
 import { db, storage } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -155,33 +155,6 @@ export const Profile = () => {
     setMessageModalActive(true);
   };
 
-  // Загрузка истории сообщений для каждого пользователя
-  const [conversations, setConversations] = useState([]);
-
-  useEffect(() => {
-    const loadConversations = async () => {
-      const loadedConversations = [];
-
-      for (const conversation of currentUserInfo?.conversations || []) {
-        const conversationRef = ref(
-          db,
-          `message/usersWithMessage/${currentUserInfo?.userId}/users/${conversation.userId}`
-        );
-        onValue(conversationRef, (snapshot) => {
-          const data = snapshot.val();
-          const lastMessage = Object.values(data?.lastMessage || {})[0];
-          loadedConversations.push({
-            id: conversation.userId,
-            name: conversation.username,
-            lastMessage: lastMessage,
-          });
-          setConversations([...loadedConversations]);
-        });
-      }
-    };
-
-    loadConversations();
-  }, [currentUserInfo]);
   return (
     <>
       <ProfileContainer>
@@ -214,20 +187,6 @@ export const Profile = () => {
               </FollowerInfoContainer>
             </div>
 
-            {conversations.map((conversation) => {
-              return (
-                <div
-                  key={conversation.id}
-                  onClick={() => handleConversationClick(conversation)}
-                  style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px' }}
-                >
-                  <h2>{conversation.name}</h2>
-                  <p>
-                    {conversation.lastMessage ? conversation.lastMessage.text : 'Нет сообщений'}
-                  </p>
-                </div>
-              );
-            })}
 
             {isUserOwnerPage ? (
               <EditProfileButton onClick={handleOpenModal}>Редактировать</EditProfileButton>

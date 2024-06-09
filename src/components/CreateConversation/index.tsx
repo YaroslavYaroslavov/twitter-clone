@@ -1,4 +1,3 @@
-import { CloseButton } from 'components/Dialog/styled';
 import { ButtonTweet } from 'components/Navbar/styled';
 import { push, ref, set } from 'firebase/database';
 import { db } from 'firebaseConfig/firebase';
@@ -6,10 +5,10 @@ import { StateInterface } from 'interface';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-const CreateConversation = ({ onConversationCreated, availableUsers, handleDialogClose }) => {
+const CreateConversation = ({ onConversationCreated, availableUsers }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [conversationName, setConversationName] = useState('');
-  const currentUserInfo = useSelector(state => state.userInfo);
+  const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
   const users = useSelector((state: StateInterface) => state.users);
 
   const handleUserSelect = (user) => {
