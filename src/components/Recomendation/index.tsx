@@ -21,7 +21,7 @@ export const Recomendation: FC<RecomendationProps> = ({ userId }) => {
   const isCurrentUser = currentUserInfo?.userId === userId;
 
   const [isFollowed, setIsFollowed] = useState(
-    Object.keys(currentUserInfo?.follow).includes(userId)
+    Object.keys(currentUserInfo?.follow || {}).includes(userId)
   );
 
   const followToUser = () => {

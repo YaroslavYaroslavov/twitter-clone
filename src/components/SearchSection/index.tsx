@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import {
   FindInput,
   RecomendationContainer,
-  SearchResultContainer,
   SearchSectionContainer,
 } from './styled';
 
@@ -51,7 +50,7 @@ export const SearchSection = () => {
 
     setUserRecomendation([
       ...filteredUsersArr,
-      ...topFollowersUsers.flatMap((user) => Object.keys(user)),
+      ...topFollowersUsers.flatMap((user) => Object.keys(user || {})),
     ].filter(userId => userId !== userInfo?.userId && !Object.keys(userInfo?.follow || {}).includes(userId) ) );
 
   }, []);
