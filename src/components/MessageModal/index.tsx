@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { MessageInput, MessageModalData, SendButton } from 'components/MessageModal/styled';
 import { Modal } from 'components/Modal';
 import { sendMessage } from 'components/SendMessage';
-import { MessageModalData, MessageInput, SendButton } from 'components/MessageModal/styled';
+import React, { useState } from 'react';
 
 export const MessageModal = ({ active, setActive, recipientUserId, senderUserId }) => {
   const [messageText, setMessageText] = useState('');

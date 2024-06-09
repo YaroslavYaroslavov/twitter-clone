@@ -1,6 +1,7 @@
+import { TweetBtn } from 'components/CreatePost/styled';
 import { Modal } from 'components/Modal';
 import { sendMessage } from 'components/SendMessage';
-import { DatabaseReference, onValue, ref, remove, set } from 'firebase/database';
+import { DatabaseReference, onValue, push, ref, remove, set } from 'firebase/database';
 import { db } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -12,10 +13,13 @@ import {
   AvatarLink,
   ButtonContainer,
   CloseButton,
+  CrossBtn,
   DialogContainer,
   DialogHeader,
+  EditUsersContainer,
+  GoBack,
+  HeaderModal,
   InputContainer,
-  KickUser,
   MembersList,
   MessageContent,
   MessageInput,
@@ -24,6 +28,7 @@ import {
   NoMessages,
   ParticipantsCount,
   SendButton,
+  SystemMessage,
   TheirMessageInfo,
   Username,
 } from './styled';
@@ -56,9 +61,34 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
   }, []);
 
   const handleKickUser = (chatID, userID) => {
+    
+    const isExit = userID === currentUserInfo?.userId
 
+    const codeOperation = isExit ? 801 : 802
+    
+    if(isExit){
+      setShowParticipantsModal(false)
+    }
+
+
+    const kickMessage = {
+      recipient: chatID,
+      sender: 'system',
+      target: userID,
+      timestamp: Date.now(),
+      code: codeOperation,
+      info: 'kick',
+      iniciator: currentUserInfo?.userId
+      
+    }
+    
+    Object.keys(conversation.users).forEach(userId => {
+      const kickMessageKey = push(ref(db,  `message/usersWithMessage/${userId}/chats/${chatID}/messages/`)).key
+      set(ref(db,  `message/usersWithMessage/${userId}/chats/${chatID}/messages/${kickMessageKey}`), kickMessage)
+    })
+    
     Object.keys(conversation.users || {}).map(userId => {
-     
+
       remove(ref(db, `message/usersWithMessage/${userId}/chats/${chatID}/users/${userID}`));
     });
   }
@@ -82,13 +112,34 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
   const handleAddUsers = () => {
    
     selectedUsers.forEach(user => {
+
+      const addMessageKey = push(ref(db,  `message/usersWithMessage/${user.id}/chats/${conversation.id}/messages/`)).key
+
+      const addMessage = {
+        recipient: conversation.id,
+        sender: 'system',
+        target: user.id,
+        timestamp: Date.now(),
+        code: 803,
+        info: 'add',
+        iniciator: currentUserInfo?.userId
+        
+      }
+
+      // Object.keys(conversation.users).forEach(userId => {
+      //   const kickMessageKey = push(ref(db,  `message/usersWithMessage/${userId}/chats/${chatID}/messages/`)).key
+      //   set(ref(db,  `message/usersWithMessage/${userId}/chats/${chatID}/messages/${kickMessageKey}`), kickMessage)
+      // })
+
       const newConversationData = {
         name: conversation.name,
-        users: {...conversation.users, [user.id]:'' }
-      
+        users: {...conversation.users, [user.id]:'' },
+        messages: {[addMessageKey]: addMessage}
       };
       Object.keys(conversation.users || {}).map(userId => {
         set(ref(db, `message/usersWithMessage/${userId}/chats/${conversation.id}/users/${user.id}`), '');
+        set(ref(db,  `message/usersWithMessage/${userId}/chats/${conversation.id}/messages/${addMessageKey}`), addMessage)
+        
       });
       set(ref(db, `message/usersWithMessage/${user.id}/chats/${conversation.id}`), newConversationData)
     })
@@ -112,6 +163,7 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
             if (conversationData) {
              
               const messagesList = Object.keys(conversationData.messages || {}).map((messageId) => ({
+                ...conversationData.messages[messageId],
                 id: messageId,
                 text: conversationData.messages[messageId].text,
                 sender: conversationData.messages[messageId].sender,
@@ -211,6 +263,29 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
       <MessagesContainer>
         {messages.length
           ? messages.map((message) => {
+            if(message.sender === 'system') {
+              
+              const userIniciator = users?.find((user) => user.userId === message.iniciator);
+              const userTarget = users?.find((user) => user.userId === message.target);
+             
+             let messageBody = 'Системное сообщение'
+
+             switch(message.code) {
+              case 801: 
+              messageBody = `${userIniciator?.username} вышел`
+                break
+              case 802: 
+              messageBody = `${userIniciator?.username} исключил ${userTarget?.username}`
+                break
+                case 803: 
+                messageBody = `${userIniciator?.username} пригласил ${userTarget?.username}`
+                  break
+             }
+
+
+              return <SystemMessage key={message.id}>{messageBody}</SystemMessage>
+            }
+
             const messageSender = users.find((user) => user.userId === message.sender);
               return (
                 <MessageItem
@@ -260,17 +335,23 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
 
      
       <Modal active={showParticipantsModal} setActive={setShowParticipantsModal}>
-        { isAddingStage ? <>
-        <div>
-        <button onClick={handleChangeStage}>Назад</button>
-        <p>Добавить пользователей</p>
-        </div>
+        { isAddingStage ? <EditUsersContainer>
+        <GoBack onClick={handleChangeStage}></GoBack>
+        <HeaderModal>
+        {
+  availableUsers.some((user) => !Object.keys(usersConversation).includes(user.id)) ?
+    <p>Пригласить пользователей</p>
+  : <p>Нет подходящих пользователей</p>
+}
+       
+        </HeaderModal>
         <div>
         {availableUsers.map((user) => {
           const currentUser = users?.find((userr) => userr.userId === user.id);
-          console.log(user)
+          
           if(Object.keys(usersConversation).includes(user.id)) {return null} else{
             return (
+              
               <div key={user.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', padding: '10px', borderBottom: '1px solid #ccc', cursor: 'pointer', backgroundColor: '#f8f8f8' }}>
                 <input
                   type="checkbox"
@@ -281,15 +362,28 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
                 <img src={currentUser?.avatar} alt="Avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
                 <span style={{ fontWeight: 'bold' }}>{currentUser?.username}</span>
               </div>
+              
             );
           }
           
         })}
       </div>
-        <button onClick={handleAddUsers}>Добавить</button>
-        </> :
-        <div>
-          <h3>Участники беседы:</h3>
+  
+      {
+  availableUsers.some((user) => !Object.keys(usersConversation).includes(user.id)) ?
+    <TweetBtn onClick={handleAddUsers}>Пригласить</TweetBtn>
+  : null
+}
+    
+       
+        </EditUsersContainer> :
+        <EditUsersContainer>
+              <HeaderModal>
+              
+              <p>Список пользователей</p>
+                {/* <CloseModal></CloseModal> */}
+              </HeaderModal>
+          
           <MembersList>
             {participants.map((participant) => {
               
@@ -300,9 +394,9 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
                   <Link to={`/profile/${participant.userlink}`}>
                     <Avatar src={participant.avatar} alt="Avatar" />
                   </Link>
-                  <KickUser onClick={()=>{
+                  <CrossBtn onClick={()=>{
                     handleKickUser(conversation.id, participant.userId)
-                  }}></KickUser>
+                  }}></CrossBtn>
                 </AvatarLink>
                
               </li>)
@@ -310,8 +404,8 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
             )}
           </MembersList>
 
-          <button onClick={handleChangeStage}>Добавить</button>
-        </div>} 
+          <TweetBtn onClick={handleChangeStage}>Пригласить</TweetBtn>
+        </EditUsersContainer>} 
       </Modal>
     </DialogContainer>
   );

@@ -1,5 +1,6 @@
 // styled.js
 import cross from 'assets/cross.svg'
+import goBack from 'assets/goback.svg'
 import sendMessage from 'assets/sendMessage.svg'
 import styled from 'styled-components';
 import { colors } from 'theme/colorsPallete';
@@ -218,6 +219,9 @@ export const DialogHeader = styled.div `
   display: flex;
   justify-content: space-between;
   align-items: end;
+  & > * {
+    width: 100px
+  }
 `
 
 export const MembersModal = styled.div`
@@ -227,7 +231,7 @@ export const MembersModal = styled.div`
 export const MembersList = styled.ul`
  list-style-type: none;
 `
-export const KickUser = styled.button`
+export const CrossBtn = styled.button`
   width: 30px;
   height: 30px;
   background: none;
@@ -243,3 +247,48 @@ export const KickUser = styled.button`
   &:hover {
     filter: invert(100%) 
   } `
+
+export const GoBack = styled.button`
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  background: url(${goBack})  center no-repeat;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  top: -5px; 
+  left: 0px;
+  margin-right: 20px;
+  cursor: pointer;
+  transition: filter 0.3s; // добавим плавное изменение фильтра при наведении
+  
+  &:hover {
+    filter: invert(100%) 
+  } `
+
+
+
+export const HeaderModal = styled.div`
+  width: 300px;
+display: flex;
+align-items: center;
+justify-content: center;
+ 
+`
+export const EditUsersContainer = styled.div`
+position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+`
+export const SystemMessage = styled.div`
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+`
