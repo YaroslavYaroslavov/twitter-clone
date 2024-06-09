@@ -1,4 +1,6 @@
 // styled.js
+import cross from 'assets/cross.svg'
+import sendMessage from 'assets/sendMessage.svg'
 import styled from 'styled-components';
 import { colors } from 'theme/colorsPallete';
 import { centerByFlex, flexColumn } from 'theme/globalStyles';
@@ -113,41 +115,56 @@ export const MessageContent = styled.div`
 
 export const InputContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
+  justify-content: space-between;
   align-items: stretch;
   padding: 10px;
+  border: 1px solid ${colors.lightGray};
+  border-radius: 5px;
+  /* gap: 20px; */
+  
 `;
 
-export const MessageInput = styled.textarea`
+export const MessageInput = styled.input`
+border: none;
   margin-bottom: 10px;
   padding: 10px;
   flex-grow: 0;
   resize: none;
   border-radius: 7px;
   height: 60px;
+  width: 100%;
+  &:focus {
+    outline-width: 0;
+}
 `;
 
 export const ButtonContainer = styled.div`
   display: flex;
+ justify-content: center;
+ align-items: center;
+ gap: 20px;
 
-  button {
-    margin-right: 10px;
-  }
 `;
-
 export const SendButton = styled.button`
-  background-color: ${colors.lightBlue};
-  color: white;
-  padding: 10px 20px;
+  width: 20px;
+  height: 20px;
+  background: none;
   border: none;
-  border-radius: 5px;
+  background: url(${sendMessage})  center no-repeat;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: invert(78%) sepia(9%) saturate(10%) hue-rotate(326deg) brightness(83%) contrast(82%);
   cursor: pointer;
-  transition: background-color 0.3s ease;
-
+  transition: filter 0.3s; // добавим плавное изменение фильтра при наведении
+  
   &:hover {
-    background-color: ${colors.lightBlueInactive};
+    filter: none;
+    transform: scale(1.2);
   }
 `;
+
 
 export const CloseButton = styled.button`
   background-color: ${colors.lightGray};
@@ -187,3 +204,42 @@ export const ParticipantsCount = styled.span`
     text-decoration: underline;
   }
 `;
+
+export const NoMessages = styled.div `
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+
+`
+export const DialogHeader = styled.div `
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+`
+
+export const MembersModal = styled.div`
+
+`
+
+export const MembersList = styled.ul`
+ list-style-type: none;
+`
+export const KickUser = styled.button`
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: none;
+  background: url(${cross})  center no-repeat;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  
+  cursor: pointer;
+  transition: filter 0.3s; // добавим плавное изменение фильтра при наведении
+  
+  &:hover {
+    filter: invert(100%) 
+  } `

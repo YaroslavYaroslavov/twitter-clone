@@ -1,6 +1,6 @@
 import { Modal } from 'components/Modal';
 import { sendMessage } from 'components/SendMessage';
-import { DatabaseReference, onValue, ref, remove } from 'firebase/database';
+import { DatabaseReference, onValue, ref, remove, set } from 'firebase/database';
 import { db } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -13,18 +13,23 @@ import {
   ButtonContainer,
   CloseButton,
   DialogContainer,
+  DialogHeader,
   InputContainer,
+  KickUser,
+  MembersList,
   MessageContent,
   MessageInput,
   MessageItem,
   MessagesContainer,
+  NoMessages,
   ParticipantsCount,
   SendButton,
   TheirMessageInfo,
   Username,
 } from './styled';
 
-const Dialog = ({ conversation, onClose }) => {
+const Dialog = ({ conversation, onClose, availableUsers }) => {
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [newMessageText, setNewMessageText] = useState('');
   const currentUserInfo = useSelector((state: StateInterface) => state.userInfo);
@@ -34,7 +39,7 @@ const Dialog = ({ conversation, onClose }) => {
   const [showParticipantsModal, setShowParticipantsModal] = useState(false);
   const [participants, setParticipants] = useState([]);
   const [usersConversation, setUsersConversation] = useState(null)
-
+  const [isAddingStage, setIsAddingStage] = useState(false)
   
 
   const isConversation = !!conversation.name
@@ -56,6 +61,38 @@ const Dialog = ({ conversation, onClose }) => {
      
       remove(ref(db, `message/usersWithMessage/${userId}/chats/${chatID}/users/${userID}`));
     });
+  }
+
+  const handleUserSelect = (user) => {
+    setSelectedUsers((prevSelectedUsers) => {
+      const isUserSelected = prevSelectedUsers.some((selectedUser) => selectedUser.id === user.id);
+      if (isUserSelected) {
+        return prevSelectedUsers.filter((selectedUser) => selectedUser.id !== user.id);
+      } else {
+        return [...prevSelectedUsers, user];
+      }
+    });
+  };
+
+
+  const handleChangeStage = ()  => {
+    setIsAddingStage(prev => !prev)
+  }
+
+  const handleAddUsers = () => {
+   
+    selectedUsers.forEach(user => {
+      const newConversationData = {
+        name: conversation.name,
+        users: conversation.users
+      
+      };
+      Object.keys(conversation.users || {}).map(userId => {
+        set(ref(db, `message/usersWithMessage/${userId}/chats/${conversation.id}/users/${user.id}`), '');
+      });
+      set(ref(db, `message/usersWithMessage/${user.id}/chats/${conversation.id}`), newConversationData)
+    })
+    
   }
 
   useEffect(() => {
@@ -135,6 +172,8 @@ const Dialog = ({ conversation, onClose }) => {
     });
   }, [conversation, currentUserInfo, users]);
 
+  const isMemberConversation = (!isConversation ||  Object.keys(usersConversation || {}).includes(currentUserInfo?.userId))
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, scrollToBottom]);
@@ -146,18 +185,28 @@ const Dialog = ({ conversation, onClose }) => {
   };
   return (
     <DialogContainer>
+      <DialogHeader>
       {interlocutorInfo?.username ? (
         <h2>Чат с {interlocutorInfo?.username}</h2>
       ) : conversation?.name ? (
-        <h2>
+        <>
+         <h2>
           {conversation?.name}
-          <ParticipantsCount onClick={handleParticipantsClick}>
-            {Object.keys(participants || {}).length} участника
-          </ParticipantsCount>
         </h2>
+         {
+          isMemberConversation && <ParticipantsCount onClick={handleParticipantsClick}>
+          {Object.keys(participants || {}).length} участника
+        </ParticipantsCount>
+        } 
+        </>
+       
+        
       ) : (
         <h2>Загрузка...</h2>
       )}
+        <CloseButton onClick={onClose}>Закрыть</CloseButton>
+      </DialogHeader>
+      
 
       <MessagesContainer>
         {messages.length
@@ -186,29 +235,62 @@ const Dialog = ({ conversation, onClose }) => {
                 </MessageItem>
               );
             })
-          : 'пока пусто'}
+          : <NoMessages>В этом чате нет сообщений</NoMessages>}
         <div ref={messagesEndRef} />
       </MessagesContainer>
-      {(!isConversation ||  Object.keys(usersConversation || {}).includes(currentUserInfo?.userId)) &&
+      
    <InputContainer>
-     <MessageInput
+   {
+   isMemberConversation && <MessageInput
        value={newMessageText}
        onChange={(e) => setNewMessageText(e.target.value)}
        placeholder="Напишите сообщение..."
      />
+   }
+     
      <ButtonContainer>
-       <SendButton onClick={handleSendMessage}>Отправить</SendButton>
-       <CloseButton onClick={onClose}>Закрыть</CloseButton>
+    {
+      isMemberConversation ? <SendButton onClick={handleSendMessage}/> : 'Вы не являетесь участником чата'
+    }   
+     
      </ButtonContainer>
    </InputContainer>
-}
+
 
 
      
       <Modal active={showParticipantsModal} setActive={setShowParticipantsModal}>
+        { isAddingStage ? <>
+        <div>
+        <button onClick={handleChangeStage}>Назад</button>
+        <p>Добавить пользователей</p>
+        </div>
+        <div>
+        {availableUsers.map((user) => {
+          const currentUser = users?.find((userr) => userr.userId === user.id);
+          console.log(user)
+          if(Object.keys(usersConversation).includes(user.id)) {return null} else{
+            return (
+              <div key={user.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', padding: '10px', borderBottom: '1px solid #ccc', cursor: 'pointer', backgroundColor: '#f8f8f8' }}>
+                <input
+                  type="checkbox"
+                  checked={selectedUsers.some((selectedUser) => selectedUser.id === user.id)}
+                  onChange={() => handleUserSelect(user)}
+                  style={{ marginRight: '10px' }}
+                />
+                <img src={currentUser?.avatar} alt="Avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
+                <span style={{ fontWeight: 'bold' }}>{currentUser?.username}</span>
+              </div>
+            );
+          }
+          
+        })}
+      </div>
+        <button onClick={handleAddUsers}>Добавить</button>
+        </> :
         <div>
           <h3>Участники беседы:</h3>
-          <ul>
+          <MembersList>
             {participants.map((participant) => {
               
               return (
@@ -218,16 +300,18 @@ const Dialog = ({ conversation, onClose }) => {
                   <Link to={`/profile/${participant.userlink}`}>
                     <Avatar src={participant.avatar} alt="Avatar" />
                   </Link>
-                  <button onClick={()=>{
+                  <KickUser onClick={()=>{
                     handleKickUser(conversation.id, participant.userId)
-                  }}>Delete</button>
+                  }}></KickUser>
                 </AvatarLink>
                
               </li>)
             }
             )}
-          </ul>
-        </div>
+          </MembersList>
+
+          <button onClick={handleChangeStage}>Добавить</button>
+        </div>} 
       </Modal>
     </DialogContainer>
   );

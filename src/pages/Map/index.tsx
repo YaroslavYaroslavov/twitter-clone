@@ -59,14 +59,17 @@ export const Map = () => {
 
 
   const postsByCoord = roundCoordinates(posts)
-  
+  const onMapClick = (e) => {
+    const coords = e.get("coords");
+    console.log(coords)
+  }
 
   return (
     <>
     
       <YMaps>
         <MapContainer>
-        <YMap width={900} height={800} defaultState={{center: [lat, long], zoom: 12}}>
+        <YMap onClick={onMapClick}  width={900} height={800} defaultState={{center: [lat, long], zoom: 12}}>
   <>
     {Object.keys(postsByCoord).map(key => {
       const [lat, long] = key.split('_');
@@ -80,6 +83,7 @@ export const Map = () => {
             key={key}
             geometry={[Number(lat), Number(long)]}
             onClick={() => {
+              
               setLat(lat);
               setLong(long);
               setModalActive(true);
