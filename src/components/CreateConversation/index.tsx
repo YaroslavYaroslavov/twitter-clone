@@ -28,6 +28,15 @@ const CreateConversation = ({ onConversationCreated, availableUsers, handleDialo
     
 
     if (selectedUsers.length > 0 && conversationName.trim() !== '') {
+   
+      const startMessage = {
+        sender: 'system',
+        timestamp: Date.now(),
+        code: 800,
+        info: 'create',
+        iniciator: currentUserInfo?.userId
+      }
+
 
       const newConversationData = {
         name: conversationName,
@@ -35,16 +44,20 @@ const CreateConversation = ({ onConversationCreated, availableUsers, handleDialo
           acc[userId] = '';
           return acc;
       }, {}),
+        
       };
 
       const newConversationKey = push(ref(db, 'message/usersWithMessage/')).key;
-  
-      console.log(newConversationData)
+      
       Object.keys(newConversationData.users).forEach((userID) => {
-        
+
+           
+
+
+          const newMessageKey = push(ref(db, `message/usersWithMessage/${userID}/${newConversationKey}`)).key;
           const conversationRef = ref(db, `message/usersWithMessage/${userID}/chats/${newConversationKey}`)
         
-          set(conversationRef, newConversationData)
+          set(conversationRef, {...newConversationData, messages: {[newMessageKey]: startMessage}})
           onConversationCreated()
       } )
 

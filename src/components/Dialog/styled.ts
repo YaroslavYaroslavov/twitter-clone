@@ -59,9 +59,11 @@ export const MessageItem = styled.div`
 
   &.mine {
     align-self: flex-end;
+    border-radius: 0
   }
 
   &.theirs {
+    border-radius: 0;
     align-self: flex-start;
   }
 `;
@@ -107,9 +109,11 @@ export const MessageContent = styled.div`
     align-self: flex-start;
     background-color: ${colors.blue};
     color: ${colors.white};
+    border-radius: 10px 10px 0px 10px;
   }
 
   &.theirs {
+    border-radius: 0px 10px 10px 10px;
     align-self: flex-start; /* Устанавливаем выравнивание по левому краю для сообщений собеседника */
   }
 `;
@@ -286,7 +290,7 @@ position: relative;
 `
 export const SystemMessage = styled.div`
   width: 100%;
-  height: 100px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;

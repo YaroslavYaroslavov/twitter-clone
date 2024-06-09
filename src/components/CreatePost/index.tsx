@@ -1,14 +1,19 @@
+import { Placemark, Map as YMap, YMaps } from '@pbe/react-yandex-maps';
 import noAvatar from 'assets/userImage.png';
+import { Modal } from 'components/Modal';
 import { push, ref, set } from 'firebase/database';
 import { getDownloadURL, ref as refStorage, uploadBytes } from 'firebase/storage';
 import { db, storage } from 'firebaseConfig/firebase';
 import { StateInterface } from 'interface';
-import React, { useRef, useState } from 'react';
+import { MapContainer } from 'pages/Map/styled';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import {
+  ActivityContainer,
   ButtonsContainer,
   CreatePostContainer,
+  GeoPick,
   PostInput,
   TweetBtn,
   UploadImg,
@@ -21,6 +26,7 @@ export const CreatePost = () => {
   const [lat, setLat] = useState(49.14);
   const [long, setLong] = useState(28.28);
   const [isUsedGeo, setIsUsingGeo] = useState(false);
+  const [modalActive, setModalActive] = useState(false);
 
   const [userPostImages, setUserPostImages] = useState<(string | ArrayBuffer | null | undefined)[]>(
     []
@@ -32,12 +38,27 @@ export const CreatePost = () => {
 
   const newPostKey = push(ref(db, `tweets/${userInfo?.userId}`)).key;
 
-  const pickGeo = () => {
-    setIsUsingGeo((prev) => !prev);
+  useEffect(()=>{
     navigator.geolocation.getCurrentPosition(function (location) {
+      if(location.coords.latitude && location.coords.longitude) {
       setLat(location.coords.latitude);
       setLong(location.coords.longitude);
+      }
+     
     });
+  }, [])
+
+  const onMapClick = (e) => {
+    const coords = e.get("coords");
+    setLat(coords[0]);
+    setLong(coords[1]);
+  }
+
+  const pickGeo = () => {
+    setIsUsingGeo((prev) => !prev);
+    if(!isUsedGeo){
+      setModalActive(true)
+    }
   };
 
   const handleCreateTweet = (uploadedLinks: string[]) => {
@@ -146,10 +167,13 @@ export const CreatePost = () => {
             ref={fileInputRef}
             style={{ display: 'none' }}
             onChange={handleFileChange}
-            // value={inputValue}
+            
           />
-          <UploadImg onClick={handleFileUploadClick} />
-          <button onClick={pickGeo}>Geo</button>
+          <ActivityContainer>
+<UploadImg onClick={handleFileUploadClick} />
+          <GeoPick onClick={pickGeo}></GeoPick>
+          </ActivityContainer>
+          
           {isUsedGeo && (
             <>
               Долгота
@@ -161,6 +185,22 @@ export const CreatePost = () => {
           <TweetBtn onClick={uploadPhotos}>Опубликовать</TweetBtn>
         </ButtonsContainer>
       </div>
+
+      <Modal active={modalActive} setActive={setModalActive}>
+      <YMaps>
+        <MapContainer>
+        <YMap onClick={onMapClick}  width={900} height={400} defaultState={{center: [lat, long], zoom: 12}}>
+        {(lat && long) && <Placemark
+        geometry={[lat, long]}
+        options={{
+        zIndex: 100
+    }}
+  />}
+        </YMap>
+      
+        </MapContainer>
+      </YMaps>
+      </Modal>
     </CreatePostContainer>
   );
 };

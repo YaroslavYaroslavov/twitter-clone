@@ -235,6 +235,8 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
     sendMessage(newMessageText, conversation.id, currentUserInfo.userId, !conversation.name);
     setNewMessageText('');
   };
+
+  const membersCount =  Object.keys(participants || {}).length
   return (
     <DialogContainer>
       <DialogHeader>
@@ -247,7 +249,8 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
         </h2>
          {
           isMemberConversation && <ParticipantsCount onClick={handleParticipantsClick}>
-          {Object.keys(participants || {}).length} участника
+          {Object.keys(participants || {}).length} 
+          {membersCount < 2 ? ' участник' : membersCount < 5 ? ' участника' : ' участников'}
         </ParticipantsCount>
         } 
         </>
@@ -271,15 +274,18 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
              let messageBody = 'Системное сообщение'
 
              switch(message.code) {
+              case 800: 
+              messageBody = `${userIniciator?.username} создал беседу ${conversation.name}`
+              break
               case 801: 
-              messageBody = `${userIniciator?.username} вышел`
+              messageBody = `${userIniciator?.username} вышел из чата`
                 break
               case 802: 
               messageBody = `${userIniciator?.username} исключил ${userTarget?.username}`
                 break
-                case 803: 
+              case 803: 
                 messageBody = `${userIniciator?.username} пригласил ${userTarget?.username}`
-                  break
+                break
              }
 
 

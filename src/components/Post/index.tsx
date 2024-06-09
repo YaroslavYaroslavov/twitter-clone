@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 
 import { PostProps } from './interface';
 import {
+  GeoContainer,
   LikeButton,
   LikeSection,
   PostContainer,
@@ -17,6 +18,7 @@ import {
   PostTextContent,
   UserAvatar,
 } from './styled';
+import { ActivityContainer, GeoPick } from 'components/CreatePost/styled';
 
 function getTimePassed(milliseconds: number) {
   const timePassed = Date.now() - milliseconds;
@@ -84,16 +86,24 @@ export const Post: FC<PostProps> = ({ postId, postData }) => {
           )}
         </PostHeader>
         <PostTextContent>{postData.content?.text}</PostTextContent>
-
+          
         {postData.content?.images &&
           postData.content.images.map((image) => (
             <img style={{ width: '200px', height: '200px' }} src={image} key={image} />
           ))}
-        <LikeSection isLiked={isLiked}>
+          <ActivityContainer>
+             <LikeSection isLiked={isLiked}>
           <LikeButton isLiked={isLiked} onClick={toggleLikePost} />
-
           <span>{likesUserArray.length}</span>
         </LikeSection>
+        {postData.content.coord.isUsedGeo && 
+        <GeoContainer>
+        <GeoPick disabled/> {Number(postData.content.coord.lat).toFixed(2)+'N'+' ' + Number(postData.content.coord.long).toFixed(2)+'E'}
+        </GeoContainer>}
+       
+          </ActivityContainer>
+       
+       
       </PostContent>
     </PostContainer>
   );
