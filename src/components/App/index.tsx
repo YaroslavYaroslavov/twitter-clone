@@ -22,12 +22,14 @@ const { homepage, signup, feed } = paths;
 const { googleProviderUrl } = configApp;
 
 function App() {
+  // console.log(123)
   const auth = useSelector((state: StateInterface) => state.auth);
-
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [user, loading] = useAuthState(auth);
+  
   const [isFetchingData, setIsFetchingData] = useState(true);
 
   const isSingnupPage = useMatch(signup);
@@ -108,6 +110,7 @@ function App() {
     <ErrorBoundary>
       <div id="recaptcha-container"></div>
       <AppContainer>
+        
         {user && user.email && !isFetchingData && <Navbar />}
         <MainContent>
           {loading || isFetchingData ? (
