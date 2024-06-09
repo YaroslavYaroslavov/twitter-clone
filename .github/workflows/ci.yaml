@@ -7,7 +7,6 @@ on:
   pull_request:
     branches:
       - develop
-      - master
 
 jobs:
   test:
@@ -21,4 +20,3 @@ jobs:
         run: npm i
       - name: Build Application
         run: npm run build
-      
