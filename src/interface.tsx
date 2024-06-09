@@ -37,6 +37,7 @@ export interface Action_SET_USERS {
 
 export interface PostInterface {
   content: {
+    coord: any;
     text: string;
     images: string[];
   };

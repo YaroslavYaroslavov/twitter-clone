@@ -1,4 +1,4 @@
-import { Placemark, Map as YMap, YMaps } from '@pbe/react-yandex-maps';
+import { Map as YMap, Placemark, YMaps } from '@pbe/react-yandex-maps';
 import noAvatar from 'assets/userImage.png';
 import { Modal } from 'components/Modal';
 import { push, ref, set } from 'firebase/database';
