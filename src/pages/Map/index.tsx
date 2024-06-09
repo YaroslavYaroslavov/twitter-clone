@@ -32,9 +32,9 @@ export const Map = () => {
     
     for (const userID in posts) {
       for (const postID in posts[userID]) {
-        const coordinates = posts[userID][postID].content.coord;
-        const roundedLat = Number(coordinates.lat).toFixed(2);
-        const roundedLong = Number(coordinates.long).toFixed(2);
+        const coordinates = posts[userID][postID].content?.coord;
+        const roundedLat = Number(coordinates?.lat).toFixed(2);
+        const roundedLong = Number(coordinates?.long).toFixed(2);
         const key = `${roundedLat}_${roundedLong}`;
     
         if (!roundedPosts[key]) {
@@ -75,7 +75,7 @@ export const Map = () => {
       const [lat, long] = key.split('_');
       
       
-      const shouldShowPlacemark = postsByCoord[key].some(post => post.content.coord.isUsedGeo);
+      const shouldShowPlacemark = postsByCoord[key].some(post => post.content?.coord?.isUsedGeo);
 
       if (shouldShowPlacemark) {
         return (
@@ -100,7 +100,7 @@ export const Map = () => {
 
     { postsByCoord[currentKey] && <Modal active={isModalActive} setActive={setModalActive}>
               {currentKey  && postsByCoord[currentKey].map((post) => {
-                if (post.content.coord.isUsedGeo) {return <Post key={post.postId} postId={post.postId} postData={post} />}
+                if (post.content?.coord.isUsedGeo) {return <Post key={post.postId} postId={post.postId} postData={post} />}
               })} 
 
           </Modal>}      

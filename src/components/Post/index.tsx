@@ -95,7 +95,7 @@ export const Post: FC<PostProps> = ({ postId, postData }) => {
           <LikeButton isLiked={isLiked} onClick={toggleLikePost} />
           <span>{likesUserArray.length}</span>
         </LikeSection>
-        {postData.content.coord.isUsedGeo && 
+        {postData.content?.coord.isUsedGeo && 
         <GeoContainer>
         <GeoPick disabled/> {Number(postData.content.coord.lat).toFixed(2)+'N'+' ' + Number(postData.content.coord.long).toFixed(2)+'E'}
         </GeoContainer>}
