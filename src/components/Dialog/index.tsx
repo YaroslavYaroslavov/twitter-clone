@@ -84,7 +84,7 @@ const Dialog = ({ conversation, onClose, availableUsers }) => {
     selectedUsers.forEach(user => {
       const newConversationData = {
         name: conversation.name,
-        users: conversation.users
+        users: {...conversation.users, [user.id]:'' }
       
       };
       Object.keys(conversation.users || {}).map(userId => {
