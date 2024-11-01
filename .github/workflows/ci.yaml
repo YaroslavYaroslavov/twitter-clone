@@ -1,0 +1,22 @@
+name: CI
+on:
+  push:
+    branches:
+      - develop
+      - master
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install packages
+        run: npm i
+      - name: Build Application
+        run: npm run build

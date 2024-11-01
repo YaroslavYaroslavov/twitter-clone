@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "jsx": "react",
+    "experimentalDecorators": true,
+
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "baseUrl": "src",
+    "resolveJsonModule": true,
+
+    "allowJs": true,
+
+    "outDir": "build",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "useUnknownInCatchVariables": true,
+    "alwaysStrict": false,
+    "noImplicitOverride": true,
+    "skipLibCheck": true
+  }
+}
